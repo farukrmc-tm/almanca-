@@ -1,0 +1,1554 @@
+```html
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WortSchatz Ultimate - B2/C1 Almanca Öğrenme Portalı</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#1e293b',
+                            950: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white pb-24 md:pb-0">
+
+    <!-- HEADER / SKOR PANELİ -->
+    <header class="border-b border-slate-900 bg-slate-950/90 sticky top-0 z-40 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showTab('dashboard')">
+                <div class="bg-indigo-600 p-2.5 rounded-2xl text-white shadow-lg shadow-indigo-500/25">
+                    <i data-lucide="graduation-cap" class="h-6 w-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">WortSchatz</h1>
+                    <p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase">B2/C1 Sınav Hazırlık Portalı</p>
+                </div>
+            </div>
+
+            <!-- Kullanıcı Skorları -->
+            <div class="flex items-center space-x-3">
+                <div class="flex items-center bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full text-amber-400 text-xs font-semibold">
+                    <i data-lucide="flame" class="h-3.5 w-3.5 mr-1 text-amber-500 animate-pulse"></i>
+                    <span id="header-streak">1 Gün</span>
+                </div>
+                <div class="flex items-center bg-indigo-500/10 border border-indigo-500/20 px-3 py-1.5 rounded-full text-indigo-400 text-xs font-semibold">
+                    <i data-lucide="sparkles" class="h-3.5 w-3.5 mr-1 text-indigo-400"></i>
+                    <span id="header-xp">0 XP</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- TOAST BİLDİRİM KUTUSU -->
+    <div id="toast" class="fixed top-20 right-4 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-emerald-500/10 border border-emerald-500 text-emerald-400 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2 text-xs font-bold">
+            <i data-lucide="info" class="h-4 w-4"></i>
+            <span id="toast-text">Başarıyla kaydedildi!</span>
+        </div>
+    </div>
+
+    <!-- ANA İÇERİK ALANI -->
+    <div class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 flex flex-col md:flex-row gap-6">
+
+        <!-- RESPONSIVE NAVİGASYON (SOL MENÜ) -->
+        <aside class="md:w-64 flex flex-row md:flex-col gap-2 p-1 md:p-0 overflow-x-auto md:overflow-visible bg-slate-900 md:bg-transparent rounded-2xl md:rounded-none border border-slate-800 md:border-none sticky bottom-4 md:bottom-auto md:top-24 z-30 order-last md:order-first shrink-0">
+            <button onclick="showTab('dashboard')" id="nav-dashboard" class="flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200">
+                <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                <span class="hidden md:inline">Panel</span>
+            </button>
+            <button onclick="showTab('flashcards')" id="nav-flashcards" class="flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200">
+                <i data-lucide="book-open" class="h-4 w-4"></i>
+                <span class="hidden md:inline">Akıllı Kartlar</span>
+            </button>
+            <button onclick="showTab('quiz')" id="nav-quiz" class="flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200">
+                <i data-lucide="help-circle" class="h-4 w-4"></i>
+                <span class="hidden md:inline">Çoktan Seçmeli</span>
+            </button>
+            <button onclick="showTab('dikte')" id="nav-dikte" class="flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200">
+                <i data-lucide="keyboard" class="h-4 w-4"></i>
+                <span class="hidden md:inline">Schreib-Diktat</span>
+            </button>
+            <button onclick="showTab('cloze')" id="nav-cloze" class="flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200">
+                <i data-lucide="text-cursor-input" class="h-4 w-4"></i>
+                <span class="hidden md:inline">Boşluk Doldurma</span>
+            </button>
+            <button onclick="showTab('grafik')" id="nav-grafik" class="flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200">
+                <i data-lucide="line-chart" class="h-4 w-4"></i>
+                <span class="hidden md:inline">Grafik Tanımlama</span>
+            </button>
+            <button onclick="showTab('redemittel')" id="nav-redemittel" class="flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200">
+                <i data-lucide="file-text" class="h-4 w-4"></i>
+                <span class="hidden md:inline">Sınav Kalıpları</span>
+            </button>
+            <button onclick="showTab('dictionary')" id="nav-dictionary" class="flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200">
+                <i data-lucide="bookmark" class="h-4 w-4"></i>
+                <span class="hidden md:inline">Kelimelerim</span>
+            </button>
+        </aside>
+
+        <!-- İÇERİK PENCERESİ (DİNAMİK TABLAR) -->
+        <main class="flex-1 flex flex-col space-y-6">
+
+            <!-- TAB 1: DASHBOARD -->
+            <section id="tab-dashboard" class="space-y-6 hidden">
+                <!-- Hoş geldin Karşılaması -->
+                <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/10 rounded-3xl p-6 md:p-8 relative overflow-hidden shadow-xl">
+                    <div class="relative z-10 max-w-xl">
+                        <span class="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full uppercase tracking-widest">Wortschatz Ultimate Portalı</span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold mt-3 text-white">Akıcı Almancaya giden yolculuğun!</h2>
+                        <p class="text-slate-400 mt-2 text-xs leading-relaxed">
+                            Aktif klavye dikte çalışması, bağlamsal boşluk doldurma testleri, interaktif grafik okuma simülasyonu ve sınav şablonları ile B2/C1 seviyesini zirveye taşı.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- İSTATİSTİKLER VE HATA KUTUSU -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900 border border-slate-800/80 p-5 rounded-2xl">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-slate-400 font-bold uppercase">Hata Kutusu (Zor Kelimeler)</span>
+                            <i data-lucide="alert-circle" class="h-4 w-4 text-rose-400"></i>
+                        </div>
+                        <div class="flex items-baseline space-x-2 mt-2">
+                            <span id="stat-errors" class="text-3xl font-extrabold text-rose-400">0</span>
+                            <span class="text-xs text-slate-500">Geliştirilecek Kelime</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-2">Yanlış bilinen kelimeler otomatik olarak buraya düşer.</p>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800/80 p-5 rounded-2xl">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-slate-400 font-bold uppercase">Ezberlenen Kelimeler</span>
+                            <i data-lucide="check-circle" class="h-4 w-4 text-emerald-400"></i>
+                        </div>
+                        <div class="flex items-baseline space-x-2 mt-2">
+                            <span id="stat-mastered" class="text-3xl font-extrabold text-emerald-400">0</span>
+                            <span class="text-xs text-slate-500">Ezberlendi</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-2">Hafızaya aldığın ve emin olduğun kelimeler.</p>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800/80 p-5 rounded-2xl">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-slate-400 font-bold uppercase">Kayıtlı Kelime Havuzun</span>
+                            <i data-lucide="database" class="h-4 w-4 text-indigo-400"></i>
+                        </div>
+                        <div class="flex items-baseline space-x-2 mt-2">
+                            <span id="stat-total" class="text-3xl font-extrabold text-indigo-400">0</span>
+                            <span class="text-xs text-slate-500">Kelime</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-2">Testlerde ve kartlarda kullanılabilir kelimeler.</p>
+                    </div>
+                </div>
+
+                <!-- GÜNLÜK GÖREVLER VE ROZETLER (YAN YANA) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Günlük Görevler -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+                        <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center mb-4 text-indigo-400">
+                            <i data-lucide="calendar-check" class="h-4.5 w-4.5 mr-1.5"></i> Daily Quests (Günlük Görevler)
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-850">
+                                <div class="flex items-center space-x-3">
+                                    <div id="quest-1-box" class="p-1 bg-slate-900 rounded-lg text-slate-600"><i data-lucide="circle-dashed" class="h-4 w-4"></i></div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-200">Kart Karıştır</p>
+                                        <p class="text-[10px] text-slate-500">Akıllı kartlarda 3 kelime gözden geçir</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-semibold text-indigo-400 font-mono">+15 XP</span>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-850">
+                                <div class="flex items-center space-x-3">
+                                    <div id="quest-2-box" class="p-1 bg-slate-900 rounded-lg text-slate-600"><i data-lucide="circle-dashed" class="h-4 w-4"></i></div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-200">Kusursuz Dikte</p>
+                                        <p class="text-[10px] text-slate-500">Yazma Dikte testinde 2 kelimeyi doğru yaz</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-semibold text-indigo-400 font-mono">+25 XP</span>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-850">
+                                <div class="flex items-center space-x-3">
+                                    <div id="quest-3-box" class="p-1 bg-slate-900 rounded-lg text-slate-600"><i data-lucide="circle-dashed" class="h-4 w-4"></i></div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-200">Grafik Çözümleyici</p>
+                                        <p class="text-[10px] text-slate-500">İnteraktif Grafik panelinde 1 inceleme yap</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-semibold text-indigo-400 font-mono">+30 XP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rozetler -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+                        <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center mb-4 text-indigo-400">
+                            <i data-lucide="award" class="h-4.5 w-4.5 mr-1.5"></i> Başarı Rozetleri (Achievements)
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Rozet 1 -->
+                            <div id="badge-pioneer" class="p-3 bg-slate-950 border border-slate-850 rounded-xl flex items-center space-x-3 opacity-40 transition-opacity">
+                                <div class="bg-indigo-600/10 p-2 rounded-lg text-indigo-400">
+                                    <i data-lucide="rocket" class="h-5 w-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-200">İlk Adım</h4>
+                                    <p class="text-[9px] text-slate-500">100 XP Barajına Ulaş</p>
+                                </div>
+                            </div>
+                            <!-- Rozet 2 -->
+                            <div id="badge-pro" class="p-3 bg-slate-950 border border-slate-850 rounded-xl flex items-center space-x-3 opacity-40 transition-opacity">
+                                <div class="bg-amber-600/10 p-2 rounded-lg text-amber-400">
+                                    <i data-lucide="zap" class="h-5 w-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-200">Kelime Avcısı</h4>
+                                    <p class="text-[9px] text-slate-500">5 Kelime Ezberle</p>
+                                </div>
+                            </div>
+                            <!-- Rozet 3 -->
+                            <div id="badge-cleaner" class="p-3 bg-slate-950 border border-slate-850 rounded-xl flex items-center space-x-3 opacity-40 transition-opacity">
+                                <div class="bg-emerald-600/10 p-2 rounded-lg text-emerald-400">
+                                    <i data-lucide="shield-check" class="h-5 w-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-200">Kusursuz Ezber</h4>
+                                    <p class="text-[9px] text-slate-500">Hata Kutusunu Sıfırla</p>
+                                </div>
+                            </div>
+                            <!-- Rozet 4 -->
+                            <div id="badge-scholar" class="p-3 bg-slate-950 border border-slate-850 rounded-xl flex items-center space-x-3 opacity-40 transition-opacity">
+                                <div class="bg-violet-600/10 p-2 rounded-lg text-violet-400">
+                                    <i data-lucide="graduation-cap" class="h-5 w-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-200">Akademisyen</h4>
+                                    <p class="text-[9px] text-slate-500">500 XP Sınırını Aş</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GÜNÜN ODAK KELİMESİ -->
+                <div id="daily-word-container" class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                    <!-- JS ile dinamik doldurulur -->
+                </div>
+            </section>
+
+            <!-- TAB 2: AKILLI FLASHKARTLAR -->
+            <section id="tab-flashcards" class="space-y-6 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-100">Akıllı Kelime Kartları</h2>
+                        <p class="text-sm text-slate-400">Edat, kalıp ve örnek cümle pratikleri yap. Kendi çağrışım notunu eklemeyi unutma!</p>
+                    </div>
+                    <span id="flashcard-counter" class="text-xs text-slate-400 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">0 / 0</span>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <!-- FLASHCARD KAPAK KUTUSU -->
+                    <div id="flashcard-box" onclick="flipCard()" class="w-full max-w-2xl min-h-[360px] bg-slate-900 border border-slate-800 rounded-3xl p-8 cursor-pointer shadow-2xl relative flex flex-col justify-between transition-all duration-300 hover:scale-[1.01]">
+                        <!-- JS ile Dinamik doldurulacak -->
+                    </div>
+
+                    <!-- KONTROL BUTONLARI -->
+                    <div class="flex items-center space-x-6 mt-6">
+                        <button onclick="prevCard()" class="bg-slate-900 border border-slate-800 hover:bg-slate-800 p-3 rounded-full text-slate-300 transition">
+                            <i data-lucide="chevron-left" class="h-6 w-6"></i>
+                        </button>
+                        <button onclick="flipCard()" class="bg-slate-900 border border-slate-800 hover:bg-slate-800 px-6 py-3 rounded-2xl text-sm font-semibold text-slate-300 transition">
+                            Kartı Çevir
+                        </button>
+                        <button onclick="nextCard()" class="bg-slate-900 border border-slate-800 hover:bg-slate-800 p-3 rounded-full text-slate-300 transition">
+                            <i data-lucide="chevron-right" class="h-6 w-6"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: ÇOKTAN SEÇMELİ TEST -->
+            <section id="tab-quiz" class="space-y-6 hidden">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-100">Çoktan Seçmeli Kelime Sınavı</h2>
+                    <p class="text-sm text-slate-400">4 seçenek arasından doğru anlamı eşleştir. Yanlış yaptıkların Hata Kutusu'na eklenir.</p>
+                </div>
+
+                <!-- Mod Seçimi -->
+                <div id="quiz-modes" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="bg-indigo-500/10 text-indigo-400 p-3 rounded-xl w-fit">
+                                <i data-lucide="arrow-right-left" class="h-6 w-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold mt-4 text-slate-100">Almanca ➔ Türkçe</h3>
+                            <p class="text-slate-400 text-xs mt-1.5 leading-relaxed">Almanca kelimeye uygun Türkçe anlamı şıklardan bulun.</p>
+                        </div>
+                        <button onclick="startQuiz('de-to-tr')" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition">Başlat (+10 XP)</button>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="bg-indigo-500/10 text-indigo-400 p-3 rounded-xl w-fit">
+                                <i data-lucide="languages" class="h-6 w-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold mt-4 text-slate-100">Türkçe ➔ Almanca</h3>
+                            <p class="text-slate-400 text-xs mt-1.5 leading-relaxed">Türkçe anlama karşılık gelen doğru Almanca kelimeyi seçin.</p>
+                        </div>
+                        <button onclick="startQuiz('tr-to-de')" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-xs transition">Başlat (+15 XP)</button>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="bg-rose-500/10 text-rose-400 p-3 rounded-xl w-fit">
+                                <i data-lucide="alert-octagon" class="h-6 w-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold mt-4 text-slate-100">Hata Kutusu Testi</h3>
+                            <p class="text-slate-400 text-xs mt-1.5 leading-relaxed">Hatalı bildiğin kelimeleri özel olarak eşleştirip erit.</p>
+                        </div>
+                        <button id="btn-quiz-errors" onclick="startQuiz('errors')" class="mt-6 w-full bg-rose-600/20 text-rose-400 border border-rose-500/20 font-semibold py-2.5 rounded-xl text-xs transition">Kutuyu Çalış</button>
+                    </div>
+                </div>
+
+                <!-- Aktif Test Penceresi -->
+                <div id="quiz-active-window" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-2xl mx-auto space-y-6 hidden">
+                    <!-- JS ile dinamik test akışı doldurulur -->
+                </div>
+
+                <!-- Test Özet Penceresi -->
+                <div id="quiz-result-window" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-2xl mx-auto space-y-6 hidden">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </section>
+
+            <!-- TAB 4: SCHREIB-DIKTAT (YAZMA TESTİ) -->
+            <section id="tab-dikte" class="space-y-6 hidden">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-100">Schreib-Diktat (Kelime Dikte Testi)</h2>
+                    <p class="text-sm text-slate-400">Türkçesi ve sesli okunuşu verilen kelimenin doğru Almanca yazılışını klavyenle harf harf doldur.</p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-2xl mx-auto space-y-6 shadow-xl">
+                    <div class="text-center py-6 space-y-4">
+                        <span class="text-xs text-indigo-400 uppercase font-bold tracking-widest">Almanca Kelimeyi Yazın:</span>
+                        
+                        <div class="flex items-center justify-center space-x-3">
+                            <h3 id="dikte-turkish-meaning" class="text-2xl font-extrabold text-white">Anlamı</h3>
+                            <button onclick="playDikteWord()" class="bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 p-2 rounded-full border border-indigo-500/20 transition">
+                                <i data-lucide="volume-2" class="h-5 w-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Harf Rehberi -->
+                        <div id="dikte-letter-hints" class="flex justify-center gap-1.5 py-2">
+                            <!-- JS ile harf kutuları çizilir -->
+                        </div>
+                    </div>
+
+                    <!-- Input alanı -->
+                    <div class="space-y-3">
+                        <input type="text" id="dikte-input" placeholder="Kelimeyi buraya yazın..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-5 py-4 text-center font-mono text-xl text-slate-100 placeholder-slate-700 focus:outline-none focus:border-indigo-600 transition" autocomplete="off" />
+                        
+                        <div class="flex space-x-3">
+                            <button onclick="checkDikteAnswer()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl text-sm transition">Cevabı Kontrol Et</button>
+                            <button onclick="skipDikteWord()" class="bg-slate-950 border border-slate-850 text-slate-400 px-5 py-3 rounded-xl text-xs font-semibold hover:bg-slate-800 transition">Pas Geç</button>
+                        </div>
+                    </div>
+
+                    <!-- Geri Bildirim -->
+                    <div id="dikte-feedback" class="p-4 rounded-2xl border border-slate-800 hidden text-sm font-semibold text-center">
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: BOŞLUK DOLDURMA (CLOZE) -->
+            <section id="tab-cloze" class="space-y-6 hidden">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-100">Lückentext (Bağlamsal Boşluk Doldurma)</h2>
+                    <p class="text-sm text-slate-400">Cümlenin gelişinden ve edat yapısından yararlanarak doğru Almanca kelimeyi seç.</p>
+                </div>
+
+                <div id="cloze-box" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-2xl mx-auto space-y-6 shadow-xl">
+                    <!-- JS ile dinamik oluşturulacak -->
+                </div>
+            </section>
+
+            <!-- TAB 6: GRAFİK TANIMLAMA (GRAFIKBESCHREIBUNG) -->
+            <section id="tab-grafik" class="space-y-6 hidden">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-100">Grafikbeschreibung (Grafik Yorumlama Pratiği)</h2>
+                    <p class="text-sm text-slate-400">Sınavlarda grafik açıklarken kullanılan temel trend cümlelerini, dinamik grafik yönlerine göre öğren.</p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-3xl mx-auto space-y-6 shadow-xl">
+                    <!-- Grafik Seçicileri (Yönler) -->
+                    <div class="flex justify-center space-x-3 border-b border-slate-800 pb-4">
+                        <button onclick="selectGrafikTrend('artiş')" id="g-btn-artis" class="px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl transition">Yükselen Trend 📈</button>
+                        <button onclick="selectGrafikTrend('azaliş')" id="g-btn-azalis" class="px-4 py-2 bg-slate-950 text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-800 transition">Düşen Trend 📉</button>
+                        <button onclick="selectGrafikTrend('stabil')" id="g-btn-stabil" class="px-4 py-2 bg-slate-950 text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-800 transition">Durağan Trend 📊</button>
+                    </div>
+
+                    <!-- SVG Grafik Panel -->
+                    <div class="bg-slate-950 border border-slate-850 rounded-2xl p-6 flex justify-center items-center">
+                        <svg id="grafik-svg" class="w-full max-w-md h-48" viewBox="0 0 100 50">
+                            <!-- JS dinamik olarak çizecektir -->
+                        </svg>
+                    </div>
+
+                    <!-- Cümle ve Boşluk Seçimi -->
+                    <div class="p-5 bg-slate-950 border border-slate-850 rounded-2xl space-y-4">
+                        <h4 class="text-xs font-bold uppercase text-indigo-400 tracking-wider">Grafiğe Uygun Akademik İfadeyi Seçin:</h4>
+                        
+                        <p class="text-sm md:text-base leading-relaxed text-slate-200">
+                            "Die vorliegende Grafik verdeutlicht die Entwicklung der Studierendenzahlen. Es ist unverkennbar, dass die Kurve in den vergangenen Jahren stark <span class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl font-mono text-indigo-400 font-bold inline-block mx-1">
+                                <select id="grafik-select-answer" onchange="checkGrafikAnswer()" class="bg-transparent border-none outline-none focus:ring-0 text-indigo-400 cursor-pointer">
+                                    <option value="" disabled selected>Seçiniz</option>
+                                    <option value="gestiegen">gestiegen (artmıştır)</option>
+                                    <option value="gesunken">gesunken (azalmıştır)</option>
+                                    <option value="konstant geblieben">konstant geblieben (sabit kalmıştır)</option>
+                                </select>
+                            </span>."
+                        </p>
+
+                        <!-- Geri bildirim mesajı -->
+                        <div id="grafik-feedback" class="p-3.5 rounded-xl text-center text-xs font-bold hidden">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 7: SINAV KALIPLARI (REDEMITTEL DEPOSU) -->
+            <section id="tab-redemittel" class="space-y-6 hidden">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-100">Sınav Hazır Kalıpları (Redemittel)</h2>
+                    <p class="text-sm text-slate-400">Yazılı ($Schriftlicher\ Ausdruck$) ve sözlü ($Mündlicher\ Ausdruck$) sınavlarda kullanabileceğin kurtarıcı şablonlar.</p>
+                </div>
+
+                <!-- Şablon Seçicileri -->
+                <div class="flex space-x-2 overflow-x-auto pb-1">
+                    <button onclick="selectRedemittelCategory('einleitung')" id="r-btn-einleitung" class="px-4 py-2 text-xs font-bold rounded-xl shrink-0 transition bg-indigo-600 text-white">Giriş Formülleri</button>
+                    <button onclick="selectRedemittelCategory('grafik')" id="r-btn-grafik" class="px-4 py-2 text-xs font-bold rounded-xl shrink-0 transition bg-slate-900 text-slate-400 hover:text-slate-200">Grafik Tanımlama</button>
+                    <button onclick="selectRedemittelCategory('argument')" id="r-btn-argument" class="px-4 py-2 text-xs font-bold rounded-xl shrink-0 transition bg-slate-900 text-slate-400 hover:text-slate-200">Argüman Sunumu</button>
+                    <button onclick="selectRedemittelCategory('meinung')" id="r-btn-meinung" class="px-4 py-2 text-xs font-bold rounded-xl shrink-0 transition bg-slate-900 text-slate-400 hover:text-slate-200">Fikir Belirtme</button>
+                </div>
+
+                <!-- Kart listesi -->
+                <div id="redemittel-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </section>
+
+            <!-- TAB 8: SÖZLÜĞÜM / EKLEME -->
+            <section id="tab-dictionary" class="space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-100">Kelime Bankası</h2>
+                        <p class="text-sm text-slate-400">Yeni eklediğin kelimeler otomatik olarak tüm oyunlara ve test havuzuna eklenir.</p>
+                    </div>
+                    <button onclick="openAddModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition flex items-center gap-2 self-stretch sm:self-auto justify-center">
+                        <i data-lucide="plus-circle" class="h-5 w-5"></i> Yeni Kelime Ekle
+                    </button>
+                </div>
+
+                <!-- Arama ve filtre -->
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-500">
+                        <i data-lucide="search" class="h-5 w-5"></i>
+                    </span>
+                    <input type="text" id="dictionary-search" oninput="renderDictionary()" placeholder="Kelime veya Türkçe karşılığıyla ara..." class="w-full bg-slate-900 border border-slate-800 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-600 transition" />
+                </div>
+
+                <!-- Kelime Grid'i -->
+                <div id="dictionary-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- JS dinamik olarak basacak -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- KELİME EKLEME MODAL PANELİ -->
+    <div id="add-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl custom-scrollbar">
+            <button onclick="closeAddModal()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-300">
+                <i data-lucide="x" class="h-5 w-5"></i>
+            </button>
+
+            <h3 class="text-xl font-bold text-white mb-4">Sözlüğe Yeni Kelime Ekle</h3>
+            
+            <form onsubmit="saveNewWord(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Almanca Kelime / Fiil*</label>
+                    <input type="text" id="add-word" required placeholder="Örn: beitragen" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-600" />
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Seviye</label>
+                        <select id="add-level" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-600">
+                            <option value="B1">B1</option>
+                            <option value="B2" selected>B2</option>
+                            <option value="C1">C1</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Edat Yapısı</label>
+                        <input type="text" id="add-prep" placeholder="Örn: zu (+ Dativ)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-600" />
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Türkçe Karşılığı*</label>
+                    <input type="text" id="add-meaning" required placeholder="Örn: Katkıda bulunmak" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-600" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Akademik Birlikte Kullanım (Kollokation)</label>
+                    <input type="text" id="add-collocation" placeholder="Örn: einen Beitrag leisten zu" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-600" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Örnek Cümle (Almanca)</label>
+                    <textarea id="add-example" placeholder="Örn: Wir müssen einen Beitrag zum Umweltschutz leisten." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-600 h-20 resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Örnek Cümle Çevirisi</label>
+                    <input type="text" id="add-example-tr" placeholder="Örn: Çevre korumaya katkıda bulunmalıyız." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-600" />
+                </div>
+
+                <div class="flex space-x-3 pt-4">
+                    <button type="button" onclick="closeAddModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 rounded-xl text-sm transition">İptal</button>
+                    <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl text-sm transition shadow-lg shadow-indigo-600/20">Sözlüğe Kaydet (+15 XP)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
+        WortSchatz Ultimate &copy; 2026. B2-C1 Akademik Gelişim Portalı.
+    </footer>
+
+    <!-- JAVASCRIPT MOTORU -->
+    <script>
+        // BAŞLANGIÇ KELİME HAVUZU (B2 / C1 AKADEMİK)
+        const initialVocabulary = [
+            { id: 1, word: "beeinflussen", level: "B2", meaning: "Etkilemek", collocation: "einen Einfluss ausüben auf (+ Akk)", example: "Die sozialen Medien üben einen großen Einfluss auf die Jugendlichen aus.", exampleTr: "Sosyal medya gençler üzerinde büyük bir etki yaratıyor.", preposition: "auf (+ Akkusativ)" },
+            { id: 2, word: "beitragen", level: "B2", meaning: "Katkıda bulunmak", collocation: "einen Beitrag leisten zu (+ Dat)", example: "Jeder Einzelne kann dazu beitragen, die Umwelt zu schützen.", exampleTr: "Her birey çevreyi korumaya katkıda bulunabilir.", preposition: "zu (+ Dativ)" },
+            { id: 3, word: "auseinandersetzen", level: "C1", meaning: "Bir konuyu derinlemesine ele almak", collocation: "sich auseinandersetzen mit (+ Dat)", example: "In meinem Aufsatz setze ich mich mit den Folgen der Digitalisierung auseinander.", exampleTr: "Kompozisyonumda dijitalleşmenin sonuçlarını derinlemesine ele alıyorum.", preposition: "mit (+ Dativ)" },
+            { id: 4, word: "abhängen", level: "B2", meaning: "Bağlı olmak", collocation: "abhängen von (+ Dat)", example: "Der Erfolg im Studium hängt von der Motivation der Studierenden ab.", exampleTr: "Üniversitedeki başarı, öğrencilerin motivasyonuna bağlıdır.", preposition: "von (+ Dativ)" },
+            { id: 5, word: "fördern", level: "B2", meaning: "Teşvik etmek, desteklemek", collocation: "Maßnahmen zur Förderung von (+ Dat)", example: "Der Staat sollte die Erforschung erneuerbarer Energien fördern.", exampleTr: "Devlet yenilenebilir enerjilerin araştırılmasını teşvik etmelidir.", preposition: "Keine (Akkusativ)" },
+            { id: 6, word: "zweifeln", level: "B2", meaning: "Şüphe etmek", collocation: "Zweifel äußern an (+ Dat)", example: "Viele Experten zweifeln an der Effizienz der neuen Methode.", exampleTr: "Birçok uzman yeni yöntemin verimliliğinden şüphe duyuyor.", preposition: "an (+ Dativ)" },
+            { id: 7, word: "verzichten", level: "B2", meaning: "Vazgeçmek, feragat etmek", collocation: "verzichten auf (+ Akk)", example: "Immer mehr Menschen verzichten auf das Auto.", exampleTr: "Giderek daha fazla insan arabadan vazgeçiyor.", preposition: "auf (+ Akkusativ)" }
+        ];
+
+        // SINAV REDEMITTEL ŞABLONLARI
+        const redemittelTemplates = {
+            einleitung: [
+                { title: "Giriş Cümlesi", de: "Das Thema '...' spielt eine wichtige Rolle in unserer heutigen Gesellschaft.", tr: "Bugünkü toplumumuzda '...' konusu önemli bir rol oynamaktadır." },
+                { title: "Giriş Alternatifi", de: "In letzter Zeit wird heftig über das Thema '...' diskutiert.", tr: "Son zamanlarda '...' konusu üzerine hararetli tartışmalar yapılmaktadır." }
+            ],
+            grafik: [
+                { title: "Grafik Kaynağı", de: "Die Daten stammen aus der Quelle '...' und beziehen sich auf das Jahr '...'.", tr: "Veriler '...' kaynağından gelmektedir ve '...' yılına aittir." },
+                { title: "Trend Belirtme", de: "Im Zeitraum von ... bis ... ist die Zahl der ... kontinuierlich gestiegen.", tr: "... ile ... dönemleri arasında ... sayısı sürekli artmıştır." }
+            ],
+            argument: [
+                { title: "Argüman Sunumu", de: "Ein wichtiges Argument für '...' ist die Tatsache, dass...", tr: "'...' lehine önemli bir argüman, ... gerçeğidir." },
+                { title: "Karşı Argüman", de: "Demgegenüber steht die Ansicht, dass...", tr: "Buna karşılık ... görüşü yer almaktadır." }
+            ],
+            meinung: [
+                { title: "Fikir Belirtme", de: "Meiner Ansicht nach ist es von großer Bedeutung, dass...", tr: "Benim görüşüme göre ... olması büyük bir önem taşımaktadır." },
+                { title: "Kişisel Deneyim", de: "In meinem Heimatland ist die Situation ganz anders...", tr: "Benim ülkemde durum tamamen farklıdır..." }
+            ]
+        };
+
+        // KULLANICI STATE / LOCALSTORAGE BAĞLANTILARI
+        let vocabulary = JSON.parse(localStorage.getItem('ws_vocabulary')) || initialVocabulary;
+        let xp = Number(localStorage.getItem('ws_xp')) || 0;
+        let streak = Number(localStorage.getItem('ws_streak')) || 1;
+        let masteredIds = JSON.parse(localStorage.getItem('ws_mastered')) || [];
+        let errorBox = JSON.parse(localStorage.getItem('ws_errors')) || [];
+        let mnemonics = JSON.parse(localStorage.getItem('ws_mnemonics')) || {};
+
+        // GÜNLÜK GÖREV STATE'LERİ
+        let dailyQuests = JSON.parse(localStorage.getItem('ws_quests')) || {
+            date: new Date().toDateString(),
+            q1: false, // 3 Kart çalış
+            q2: false, // Dikte testinde 2 kelime yaz
+            q3: false, // Grafikbeschreibung tamamla
+            cardsViewed: 0,
+            dikteSuccesses: 0
+        };
+
+        // GÖREVLER SIFIRLAMA
+        if (dailyQuests.date !== new Date().toDateString()) {
+            dailyQuests = {
+                date: new Date().toDateString(),
+                q1: false,
+                q2: false,
+                q3: false,
+                cardsViewed: 0,
+                dikteSuccesses: 0
+            };
+            saveState();
+        }
+
+        function saveState() {
+            localStorage.setItem('ws_vocabulary', JSON.stringify(vocabulary));
+            localStorage.setItem('ws_xp', xp.toString());
+            localStorage.setItem('ws_streak', streak.toString());
+            localStorage.setItem('ws_mastered', JSON.stringify(masteredIds));
+            localStorage.setItem('ws_errors', JSON.stringify(errorBox));
+            localStorage.setItem('ws_mnemonics', JSON.stringify(mnemonics));
+            localStorage.setItem('ws_quests', JSON.stringify(dailyQuests));
+            updateStatsUI();
+        }
+
+        // BİLDİRİM TETİKLEYİCİ
+        function toast(text, type = "success") {
+            const toastEl = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            toastText.textContent = text;
+            
+            toastEl.className = `fixed top-20 right-4 z-50 transform translate-y-0 opacity-100 transition-all duration-300 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2 text-xs font-bold border ${
+                type === 'error' 
+                    ? 'bg-rose-500/10 border-rose-500 text-rose-400' 
+                    : 'bg-emerald-500/10 border-emerald-500 text-emerald-400'
+            }`;
+
+            setTimeout(() => {
+                toastEl.className = "fixed top-20 right-4 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 pointer-events-none";
+            }, 3000);
+        }
+
+        // TTS SES MOTORU
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'de-DE';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                toast("Tarayıcınız ses motorunu desteklemiyor.", "error");
+            }
+        }
+
+        // TAB GEÇİŞLERİ (SPA ROUTING)
+        function showTab(tabName) {
+            const tabs = ['dashboard', 'flashcards', 'quiz', 'dikte', 'cloze', 'grafik', 'redemittel', 'dictionary'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`).className = "flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200";
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`nav-${tabName}`).className = "flex-1 md:flex-initial flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-semibold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30";
+
+            // Tab yükleme fonksiyonlarını tetikle
+            if (tabName === 'dashboard') loadDashboard();
+            if (tabName === 'flashcards') loadFlashcards();
+            if (tabName === 'quiz') resetQuizUI();
+            if (tabName === 'dikte') startDikteRound();
+            if (tabName === 'cloze') loadClozeRound();
+            if (tabName === 'grafik') loadGrafikbeschreibung();
+            if (tabName === 'redemittel') loadRedemittel();
+            if (tabName === 'dictionary') renderDictionary();
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // PANEL GÜNCELLEMELERİ VE SKOR TABLOSU
+        function updateStatsUI() {
+            document.getElementById('header-xp').textContent = `${xp} XP`;
+            document.getElementById('header-streak').textContent = `${streak} Gün`;
+            
+            if (document.getElementById('stat-errors')) {
+                document.getElementById('stat-errors').textContent = errorBox.length;
+                document.getElementById('stat-mastered').textContent = masteredIds.length;
+                document.getElementById('stat-total').textContent = vocabulary.length;
+            }
+
+            // Günlük Görevler Görünümü
+            if (dailyQuests.q1) {
+                document.getElementById('quest-1-box').className = "p-1 bg-emerald-500/20 rounded-lg text-emerald-400";
+                document.getElementById('quest-1-box').innerHTML = '<i data-lucide="check" class="h-4 w-4"></i>';
+            } else {
+                document.getElementById('quest-1-box').className = "p-1 bg-slate-900 rounded-lg text-slate-600";
+                document.getElementById('quest-1-box').innerHTML = '<i data-lucide="circle-dashed" class="h-4 w-4"></i>';
+            }
+
+            if (dailyQuests.q2) {
+                document.getElementById('quest-2-box').className = "p-1 bg-emerald-500/20 rounded-lg text-emerald-400";
+                document.getElementById('quest-2-box').innerHTML = '<i data-lucide="check" class="h-4 w-4"></i>';
+            } else {
+                document.getElementById('quest-2-box').className = "p-1 bg-slate-900 rounded-lg text-slate-600";
+                document.getElementById('quest-2-box').innerHTML = '<i data-lucide="circle-dashed" class="h-4 w-4"></i>';
+            }
+
+            if (dailyQuests.q3) {
+                document.getElementById('quest-3-box').className = "p-1 bg-emerald-500/20 rounded-lg text-emerald-400";
+                document.getElementById('quest-3-box').innerHTML = '<i data-lucide="check" class="h-4 w-4"></i>';
+            } else {
+                document.getElementById('quest-3-box').className = "p-1 bg-slate-900 rounded-lg text-slate-600";
+                document.getElementById('quest-3-box').innerHTML = '<i data-lucide="circle-dashed" class="h-4 w-4"></i>';
+            }
+
+            // Rozetlerin Kilidini Açma
+            if (xp >= 100) document.getElementById('badge-pioneer').classList.remove('opacity-40');
+            if (masteredIds.length >= 5) document.getElementById('badge-pro').classList.remove('opacity-40');
+            if (errorBox.length === 0 && masteredIds.length > 0) document.getElementById('badge-cleaner').classList.remove('opacity-40');
+            if (xp >= 500) document.getElementById('badge-scholar').classList.remove('opacity-40');
+
+            lucide.createIcons();
+        }
+
+        // PANEL YÜKLEME
+        function loadDashboard() {
+            if (vocabulary.length === 0) return;
+            const focusWord = vocabulary[0];
+            const container = document.getElementById('daily-word-container');
+            container.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-xs bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-full font-mono font-bold">${focusWord.level} Seviyesi</span>
+                        <h4 class="text-2xl font-bold text-slate-100 mt-2 font-mono">${focusWord.word}</h4>
+                    </div>
+                    <button onclick="speak('${focusWord.word}')" class="bg-slate-850 hover:bg-slate-800 p-2.5 rounded-full text-slate-300 transition">
+                        <i data-lucide="volume-2" class="h-5 w-5"></i>
+                    </button>
+                </div>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800/60 pt-4">
+                    <div>
+                        <span class="text-[10px] text-slate-500 font-bold block mb-1">TÜRKÇE ANLAMI:</span>
+                        <p class="text-slate-200 font-semibold">${focusWord.meaning}</p>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-slate-500 font-bold block mb-1">AKADEMİK KALIP:</span>
+                        <p class="text-indigo-400 font-semibold font-mono">${focusWord.collocation || "Belirtilmemiş"}</p>
+                    </div>
+                </div>
+                <div class="mt-4 bg-slate-950 p-4 rounded-xl border border-slate-850">
+                    <span class="text-[10px] text-slate-500 font-bold block mb-1">ÖRNEK CÜMLE:</span>
+                    <p class="text-slate-200 italic font-medium">"${focusWord.example}"</p>
+                    <p class="text-slate-400 text-xs mt-1">→ ${focusWord.exampleTr}</p>
+                </div>
+            `;
+            updateStatsUI();
+        }
+
+        // TAB 2: FLASHCARDS MOTORU
+        let currentCardIndex = 0;
+        let isCardFlipped = false;
+
+        function loadFlashcards() {
+            if (vocabulary.length === 0) {
+                document.getElementById('flashcard-box').innerHTML = "<p class='text-center text-slate-400'>Hiç kelimeniz bulunmuyor.</p>";
+                return;
+            }
+            document.getElementById('flashcard-counter').textContent = `${currentCardIndex + 1} / ${vocabulary.length}`;
+            const word = vocabulary[currentCardIndex];
+            const box = document.getElementById('flashcard-box');
+            
+            const mKey = `m-${word.id}`;
+            const currentMnemonic = mnemonics[mKey] || "";
+
+            if (!isCardFlipped) {
+                box.innerHTML = `
+                    <div class="flex justify-between items-center w-full">
+                        <span class="text-xs bg-indigo-500/15 text-indigo-400 px-3 py-1 rounded-full font-bold uppercase tracking-wider">${word.level}</span>
+                        <button onclick="event.stopPropagation(); speak('${word.word}')" class="bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-slate-200 transition">
+                            <i data-lucide="volume-2" class="h-5 w-5"></i>
+                        </button>
+                    </div>
+                    <div class="my-8 text-center flex-1 flex flex-col justify-center">
+                        <h3 class="text-4xl font-extrabold text-white font-mono tracking-tight">${word.word}</h3>
+                        ${word.preposition ? `<span class="inline-block bg-slate-950 border border-slate-850 text-xs text-indigo-400 px-3 py-1 rounded-full font-mono mt-3 max-w-fit mx-auto">${word.preposition}</span>` : ""}
+                    </div>
+                    <div class="text-center text-[10px] text-slate-500 uppercase tracking-widest mt-auto">Ayrıntılar için tıkla</div>
+                `;
+            } else {
+                box.innerHTML = `
+                    <div class="flex justify-between items-center w-full">
+                        <span class="text-xs bg-indigo-500/15 text-indigo-400 px-3 py-1 rounded-full font-bold uppercase tracking-wider">${word.level}</span>
+                        <div class="flex space-x-2">
+                            <button onclick="event.stopPropagation(); toggleMasteredCard(${word.id})" class="p-2 rounded-full border transition ${masteredIds.includes(word.id) ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-emerald-450'}">
+                                <i data-lucide="check" class="h-4.5 w-4.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="my-4 text-left space-y-3.5 flex-1 flex flex-col justify-center">
+                        <div>
+                            <span class="text-[9px] text-slate-500 font-bold uppercase block tracking-wider">1. Türkçe Anlamı:</span>
+                            <p class="text-base font-bold text-slate-100">${word.meaning}</p>
+                        </div>
+                        ${word.collocation ? `<div>
+                            <span class="text-[9px] text-slate-500 font-bold block uppercase tracking-wider">2. Akademik Birliktelik (Kollokation):</span>
+                            <p class="text-xs font-bold text-indigo-400 font-mono">${word.collocation}</p>
+                        </div>` : ""}
+                        <div>
+                            <span class="text-[9px] text-slate-500 font-bold block uppercase tracking-wider">3. Örnek Cümle & Çeviri:</span>
+                            <p class="text-slate-100 italic font-medium text-xs">"${word.example}"</p>
+                            <p class="text-slate-400 text-[11px] mt-0.5">→ ${word.exampleTr}</p>
+                        </div>
+                        <!-- ÇAĞRIŞIM KÖŞESİ (MNEMONIC) -->
+                        <div class="pt-2 border-t border-slate-800/60" onclick="event.stopPropagation()">
+                            <span class="text-[9px] text-indigo-400 font-bold block uppercase tracking-wider flex items-center mb-1">
+                                <i data-lucide="lightbulb" class="h-3 w-3 mr-1 text-indigo-400"></i> Çağrışım Notum (Mnemonic):
+                            </span>
+                            <input type="text" id="mnemonic-input" onblur="saveMnemonic(${word.id})" placeholder="Hafızanı tetikleyecek Türkçe bir ipucu yaz..." value="${currentMnemonic}" class="w-full bg-slate-950 border border-slate-850 rounded-lg px-3 py-1.5 text-xs text-slate-200 placeholder-slate-650 focus:outline-none focus:border-indigo-600 transition" />
+                        </div>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+
+            // Günlük Görev Değerlendirmesi
+            dailyQuests.cardsViewed++;
+            if (dailyQuests.cardsViewed >= 3 && !dailyQuests.q1) {
+                dailyQuests.q1 = true;
+                xp += 15;
+                toast("Günlük Görev Tamamlandı: Akıllı Kartları Çalış! (+15 XP)");
+            }
+            saveState();
+        }
+
+        function flipCard() {
+            isCardFlipped = !isCardFlipped;
+            loadFlashcards();
+        }
+
+        function nextCard() {
+            isCardFlipped = false;
+            currentCardIndex = currentCardIndex < vocabulary.length - 1 ? currentCardIndex + 1 : 0;
+            loadFlashcards();
+        }
+
+        function prevCard() {
+            isCardFlipped = false;
+            currentCardIndex = currentCardIndex > 0 ? currentCardIndex - 1 : vocabulary.length - 1;
+            loadFlashcards();
+        }
+
+        function toggleMasteredCard(id) {
+            if (masteredIds.includes(id)) {
+                masteredIds = masteredIds.filter(mid => mid !== id);
+                toast("Kelime ezber listesinden çıkarıldı.");
+            } else {
+                masteredIds.push(id);
+                xp += 20;
+                toast("Kelime başarıyla ezberlendi! (+20 XP)");
+            }
+            saveState();
+            loadFlashcards();
+        }
+
+        function saveMnemonic(wordId) {
+            const val = document.getElementById('mnemonic-input').value;
+            const mKey = `m-${wordId}`;
+            mnemonics[mKey] = val;
+            saveState();
+            toast("Çağrışım ipucu başarıyla kaydedildi!");
+        }
+
+        // TAB 3: ÇOKTAN SEÇMELİ TEST MOTORU
+        let currentQuizIndex = 0;
+        let selectedQuizOption = null;
+        let isQuizAnswered = false;
+        let activeQuizQuestions = [];
+        let activeQuizMode = null;
+        let activeQuizHistory = [];
+        let activeQuizScore = 0;
+
+        function resetQuizUI() {
+            document.getElementById('quiz-modes').classList.remove('hidden');
+            document.getElementById('quiz-active-window').classList.add('hidden');
+            document.getElementById('quiz-result-window').classList.add('hidden');
+            
+            // Hata kutusu çalış butonunu pasif/aktif ayarla
+            const errBtn = document.getElementById('btn-quiz-errors');
+            if (errorBox.length === 0) {
+                errBtn.className = "mt-6 w-full bg-slate-950 text-slate-600 border border-slate-900 cursor-not-allowed text-xs py-2.5 rounded-xl font-semibold";
+            } else {
+                errBtn.className = "mt-6 w-full bg-rose-600/20 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 text-xs py-2.5 rounded-xl font-semibold transition";
+            }
+        }
+
+        function startQuiz(mode) {
+            const pool = mode === 'errors' 
+                ? vocabulary.filter(v => errorBox.includes(v.id))
+                : vocabulary;
+
+            if (pool.length < 2) {
+                toast("Bu havuzda test başlatmak için en az 2 kelime bulunmalıdır.", "error");
+                return;
+            }
+
+            activeQuizMode = mode;
+            currentQuizIndex = 0;
+            isQuizAnswered = false;
+            selectedQuizOption = null;
+            activeQuizHistory = [];
+            activeQuizScore = 0;
+
+            const shuffledPool = [...pool].sort(() => 0.5 - Math.random());
+            
+            activeQuizQuestions = shuffledPool.map((item) => {
+                const isDeToTr = mode === 'de-to-tr' || mode === 'errors';
+                const correctAnswer = isDeToTr ? item.meaning : item.word;
+                
+                const distractors = vocabulary
+                    .filter(v => v.id !== item.id)
+                    .map(v => isDeToTr ? v.meaning : v.word);
+                
+                const shuffledDistractors = [...distractors].sort(() => 0.5 - Math.random()).slice(0, Math.min(distractors.length, 3));
+                const options = [correctAnswer, ...shuffledDistractors].sort(() => 0.5 - Math.random());
+
+                return {
+                    wordObj: item,
+                    correctAnswer,
+                    options
+                };
+            });
+
+            document.getElementById('quiz-modes').classList.add('hidden');
+            document.getElementById('quiz-active-window').classList.remove('hidden');
+            document.getElementById('quiz-result-window').classList.add('hidden');
+
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const question = activeQuizQuestions[currentQuizIndex];
+            const isDeToTr = activeQuizMode === 'de-to-tr' || activeQuizMode === 'errors';
+            
+            const container = document.getElementById('quiz-active-window');
+            container.innerHTML = `
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <span class="text-xs text-indigo-400 font-bold uppercase tracking-widest">${activeQuizMode === 'tr-to-de' ? 'Türkçe ➔ Almanca' : 'Almanca ➔ Türkçe'}</span>
+                    <span class="text-xs text-slate-550 font-mono bg-slate-950 px-2 py-0.5 rounded">Soru: ${currentQuizIndex + 1} / ${activeQuizQuestions.length}</span>
+                </div>
+
+                <div class="text-center py-4 space-y-2">
+                    <span class="text-[10px] text-slate-500 uppercase font-bold tracking-widest block">Doğru eşleşmeyi bulun:</span>
+                    <h3 class="text-3xl font-extrabold text-white font-mono">${isDeToTr ? question.wordObj.word : question.wordObj.meaning}</h3>
+                    ${isDeToTr ? `
+                        <button onclick="speak('${question.wordObj.word}')" class="text-xs text-indigo-400 hover:underline inline-flex items-center gap-1.5 bg-indigo-500/5 px-2.5 py-1 rounded-full border border-indigo-500/10 mt-1">
+                            <i data-lucide="volume-2" class="h-3.5 w-3.5"></i> Telaffuz Et
+                        </button>
+                    ` : ""}
+                </div>
+
+                <div class="grid grid-cols-1 gap-3" id="quiz-options-box">
+                    ${question.options.map((option, idx) => `
+                        <button onclick="selectQuizOption('${option}')" id="q-opt-${idx}" class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-300 hover:bg-slate-800 text-sm font-semibold transition flex justify-between items-center">
+                            <span>${option}</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div id="quiz-collocation-hint" class="bg-slate-950 p-4 rounded-xl border border-slate-850 hidden animate-fadeIn space-y-1 text-xs text-slate-400">
+                    <span class="text-[10px] text-indigo-400 font-bold uppercase tracking-wider block">Kelime Hafıza Kartı Bilgisi:</span>
+                    <p class="font-bold text-slate-200">${question.wordObj.word} ➔ ${question.wordObj.meaning}</p>
+                    ${question.wordObj.collocation ? `<p class="text-indigo-400 font-mono">Birlikte Kullanım: ${question.wordObj.collocation}</p>` : ""}
+                    <p class="italic text-slate-400 mt-1">"${question.wordObj.example}"</p>
+                </div>
+
+                <div class="flex justify-between items-center border-t border-slate-800 pt-4">
+                    <button onclick="resetQuizUI()" class="text-xs text-slate-550 hover:text-white">Çıkış</button>
+                    <button id="quiz-next-btn" disabled onclick="nextQuizQuestion()" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 bg-slate-800 text-slate-500 cursor-not-allowed">
+                        Sıradaki Soru <i data-lucide="chevron-right" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function selectQuizOption(option) {
+            if (isQuizAnswered) return;
+            isQuizAnswered = true;
+            selectedQuizOption = option;
+
+            const question = activeQuizQuestions[currentQuizIndex];
+            const isCorrect = option === question.correctAnswer;
+
+            if (isCorrect) {
+                activeQuizScore++;
+                xp += 10;
+                if (activeQuizMode === 'errors') {
+                    errorBox = errorBox.filter(id => id !== question.wordObj.id);
+                }
+            } else {
+                if (!errorBox.includes(question.wordObj.id)) {
+                    errorBox.push(question.wordObj.id);
+                }
+            }
+            saveState();
+
+            question.options.forEach((opt, idx) => {
+                const btn = document.getElementById(`q-opt-${idx}`);
+                btn.disabled = true;
+                if (opt === question.correctAnswer) {
+                    btn.className = "w-full text-left p-3.5 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 font-bold text-sm transition flex justify-between items-center";
+                    btn.innerHTML += '<i data-lucide="check" class="h-4 w-4 text-emerald-400"></i>';
+                } else if (opt === option) {
+                    btn.className = "w-full text-left p-3.5 rounded-xl border border-rose-500 bg-rose-500/10 text-rose-400 line-through text-sm transition flex justify-between items-center";
+                    btn.innerHTML += '<i data-lucide="x" class="h-4 w-4 text-rose-400"></i>';
+                } else {
+                    btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-900 bg-slate-950/45 text-slate-600 cursor-not-allowed text-sm transition flex justify-between items-center";
+                }
+            });
+
+            document.getElementById('quiz-collocation-hint').classList.remove('hidden');
+
+            const nextBtn = document.getElementById('quiz-next-btn');
+            nextBtn.disabled = false;
+            nextBtn.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 bg-indigo-600 hover:bg-indigo-500 text-white";
+
+            activeQuizHistory.push({
+                word: question.wordObj.word,
+                meaning: question.wordObj.meaning,
+                isCorrect,
+                userAnswer: option,
+                correctAnswer: question.correctAnswer
+            });
+            lucide.createIcons();
+        }
+
+        function nextQuizQuestion() {
+            isQuizAnswered = false;
+            selectedQuizOption = null;
+            
+            if (currentQuizIndex < activeQuizQuestions.length - 1) {
+                currentQuizIndex++;
+                renderQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-active-window').classList.add('hidden');
+            const resultWindow = document.getElementById('quiz-result-window');
+            resultWindow.classList.remove('hidden');
+
+            resultWindow.innerHTML = `
+                <div class="text-center">
+                    <div class="bg-indigo-600 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto shadow-lg shadow-indigo-600/20 mb-3">
+                        <i data-lucide="trophy" class="h-8 w-8 text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Sınav Tamamlandı!</h3>
+                    <p class="text-xs text-slate-400">Zayıf noktalarını eriterek Almancanı kusursuzlaştır.</p>
+                </div>
+
+                <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <div class="text-xl font-bold text-indigo-400">+${activeQuizScore * 10}</div>
+                        <span class="text-[9px] text-slate-500 font-bold uppercase block mt-1">Kazanılan XP</span>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold text-emerald-400">${activeQuizScore}</div>
+                        <span class="text-[9px] text-slate-500 font-bold uppercase block mt-1">Doğru Sayısı</span>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold text-rose-400">${activeQuizQuestions.length - activeQuizScore}</div>
+                        <span class="text-[9px] text-slate-500 font-bold uppercase block mt-1">Yanlış Sayısı</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider block">Soru Analiz Raporu:</span>
+                    <div class="max-h-52 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                        ${activeQuizHistory.map((hist) => `
+                            <div class="p-3 rounded-xl border flex justify-between items-center text-xs ${hist.isCorrect ? 'bg-emerald-500/5 border-emerald-500/10 text-emerald-400' : 'bg-rose-500/5 border-rose-500/10 text-rose-400'}">
+                                <div>
+                                    <p class="font-bold font-mono text-sm">${hist.word}</p>
+                                    <p class="text-slate-450 mt-0.5">Doğru Karşılık: ${hist.correctAnswer}</p>
+                                    ${!hist.isCorrect ? `<p class="text-[10px] text-rose-400 mt-1">Sizin Seçiminiz: <span class="line-through">${hist.userAnswer}</span></p>` : ""}
+                                </div>
+                                <span class="px-2 py-0.5 rounded font-bold uppercase text-[9px] ${hist.isCorrect ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">${hist.isCorrect ? 'Doğru' : 'Yanlış'}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="startQuiz(activeQuizMode)" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                        <i data-lucide="refresh-cw" class="h-4 w-4 animate-spin"></i> Yeniden Başlat
+                    </button>
+                    <button onclick="resetQuizUI()" class="flex-1 bg-slate-950 border border-slate-850 text-slate-205 font-semibold py-3 rounded-xl text-xs hover:bg-slate-800 transition">
+                        Mod Menüsü
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // TAB 4: SCHREIB-DIKTAT (HARF HARF KLAVYE TESTİ)
+        let activeDikteWord = null;
+
+        function startDikteRound() {
+            if (vocabulary.length === 0) return;
+            const shuffled = [...vocabulary].sort(() => 0.5 - Math.random());
+            activeDikteWord = shuffled[0];
+
+            document.getElementById('dikte-turkish-meaning').textContent = activeDikteWord.meaning;
+            document.getElementById('dikte-input').value = "";
+            document.getElementById('dikte-feedback').classList.add('hidden');
+
+            const hintsContainer = document.getElementById('dikte-letter-hints');
+            hintsContainer.innerHTML = "";
+            for (let i = 0; i < activeDikteWord.word.length; i++) {
+                const char = activeDikteWord.word[i];
+                if (char === " " || char === "-") {
+                    hintsContainer.innerHTML += `<span class="w-5 text-center text-slate-550 text-lg">-</span>`;
+                } else {
+                    hintsContainer.innerHTML += `<span id="dikte-hint-char-${i}" class="w-8 h-8 flex items-center justify-center bg-slate-950 border border-slate-850 rounded-lg text-xs text-slate-700 font-mono font-bold">?</span>`;
+                }
+            }
+
+            speak(activeDikteWord.word);
+        }
+
+        function playDikteWord() {
+            if (activeDikteWord) speak(activeDikteWord.word);
+        }
+
+        function checkDikteAnswer() {
+            const inputVal = document.getElementById('dikte-input').value.trim().toLowerCase();
+            const correctVal = activeDikteWord.word.trim().toLowerCase();
+
+            const fb = document.getElementById('dikte-feedback');
+            fb.classList.remove('hidden');
+
+            if (inputVal === correctVal) {
+                fb.className = "p-4 rounded-2xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 text-sm font-semibold text-center";
+                fb.innerHTML = `✓ Harika! Kelimeyi doğru yazdınız: <span class="font-mono">${activeDikteWord.word}</span> (+20 XP)`;
+                xp += 20;
+                
+                dailyQuests.dikteSuccesses++;
+                if (dailyQuests.dikteSuccesses >= 2 && !dailyQuests.q2) {
+                    dailyQuests.q2 = true;
+                    xp += 25;
+                    toast("Günlük Görev Tamamlandı: Kusursuz Dikte! (+25 XP)");
+                }
+                saveState();
+
+                setTimeout(startDikteRound, 2500);
+            } else {
+                fb.className = "p-4 rounded-2xl border border-rose-500 bg-rose-500/10 text-rose-400 text-sm font-semibold text-center";
+                fb.innerHTML = `✗ Yanlış yazım. Doğru yazılışı: <span class="font-mono text-white">${activeDikteWord.word}</span>. Lütfen tekrar deneyin.`;
+                
+                if (!errorBox.includes(activeDikteWord.id)) {
+                    errorBox.push(activeDikteWord.id);
+                    saveState();
+                }
+
+                for (let i = 0; i < activeDikteWord.word.length; i++) {
+                    const char = activeDikteWord.word[i];
+                    if (inputVal[i] === char.toLowerCase()) {
+                        const hintBox = document.getElementById(`dikte-hint-char-${i}`);
+                        if (hintBox) {
+                            hintBox.textContent = char;
+                            hintBox.className = "w-8 h-8 flex items-center justify-center bg-emerald-500/10 border border-emerald-550 rounded-lg text-xs text-emerald-400 font-mono font-bold";
+                        }
+                    }
+                }
+            }
+        }
+
+        function skipDikteWord() {
+            startDikteRound();
+        }
+
+        // TAB 5: LÜCKENTEXT (BOŞLUK DOLDURMA)
+        let activeClozeWord = null;
+        let activeClozeOptions = [];
+
+        function loadClozeRound() {
+            if (vocabulary.length < 2) {
+                document.getElementById('cloze-box').innerHTML = "<p class='text-center text-slate-400'>Test için yeterli kelime havuzu bulunmuyor.</p>";
+                return;
+            }
+            
+            const filteredPool = vocabulary.filter(v => v.example);
+            if (filteredPool.length === 0) {
+                document.getElementById('cloze-box').innerHTML = "<p class='text-center text-slate-400'>Örnek cümlesi olan kelime bulunmuyor.</p>";
+                return;
+            }
+
+            const shuffled = [...filteredPool].sort(() => 0.5 - Math.random());
+            activeClozeWord = shuffled[0];
+
+            const regex = new RegExp(activeClozeWord.word, 'gi');
+            const clozeSentence = activeClozeWord.example.replace(regex, "___________");
+
+            const distractors = vocabulary
+                .filter(v => v.id !== activeClozeWord.id)
+                .map(v => v.word);
+            const shuffledDistractors = [...distractors].sort(() => 0.5 - Math.random()).slice(0, 3);
+            activeClozeOptions = [activeClozeWord.word, ...shuffledDistractors].sort(() => 0.5 - Math.random());
+
+            const box = document.getElementById('cloze-box');
+            box.innerHTML = `
+                <div class="space-y-4">
+                    <span class="text-xs text-indigo-400 uppercase font-bold tracking-widest block">Boşluğa Hangi Kelime Gelmeli?</span>
+                    <blockquote class="text-lg md:text-xl font-medium text-slate-100 bg-slate-950 p-6 rounded-2xl border border-slate-850 italic">
+                        "${clozeSentence}"
+                    </blockquote>
+                    <p class="text-xs text-slate-400">Çeviri: ${activeClozeWord.exampleTr}</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3" id="cloze-options-grid">
+                    ${activeClozeOptions.map((opt, idx) => `
+                        <button onclick="checkClozeAnswer('${opt}', ${idx})" id="cloze-opt-${idx}" class="p-3.5 bg-slate-950 border border-slate-850 hover:bg-slate-800 text-slate-200 text-xs font-bold rounded-xl transition text-left">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div id="cloze-feedback" class="p-3 text-center text-xs font-bold rounded-xl border border-slate-850 hidden"></div>
+            `;
+        }
+
+        function checkClozeAnswer(answer, optionIdx) {
+            const isCorrect = answer === activeClozeWord.word;
+            const fb = document.getElementById('cloze-feedback');
+            fb.classList.remove('hidden');
+
+            activeClozeOptions.forEach((opt, idx) => {
+                const btn = document.getElementById(`cloze-opt-${idx}`);
+                btn.disabled = true;
+                if (opt === activeClozeWord.word) {
+                    btn.className = "p-3.5 bg-emerald-500/10 border border-emerald-500 text-emerald-400 text-xs font-bold rounded-xl text-left";
+                } else if (idx === optionIdx) {
+                    btn.className = "p-3.5 bg-rose-500/10 border border-rose-500 text-rose-400 text-xs font-bold rounded-xl text-left";
+                } else {
+                    btn.className = "p-3.5 bg-slate-950/40 border border-slate-900 text-slate-600 text-xs font-bold rounded-xl text-left cursor-not-allowed";
+                }
+            });
+
+            if (isCorrect) {
+                fb.className = "p-3 text-center text-xs font-bold rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400";
+                fb.textContent = "✓ Doğru kelime yerleştirildi! (+15 XP)";
+                xp += 15;
+                saveState();
+                setTimeout(loadClozeRound, 2500);
+            } else {
+                fb.className = "p-3 text-center text-xs font-bold rounded-xl border border-rose-500 bg-rose-500/10 text-rose-400";
+                fb.textContent = `✗ Yanlış. Doğru cevap: ${activeClozeWord.word}`;
+                
+                if (!errorBox.includes(activeClozeWord.id)) {
+                    errorBox.push(activeClozeWord.id);
+                    saveState();
+                }
+                setTimeout(loadClozeRound, 3000);
+            }
+        }
+
+        // TAB 6: GRAFIKBESCHREIBUNG (INTERAKTİF SVG GRAFİK TANIMLAMA)
+        let activeGrafikTrend = "artiş"; // artis, azalis, stabil
+
+        function loadGrafikbeschreibung() {
+            document.getElementById('g-btn-artis').className = "px-4 py-2 bg-slate-950 text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-800 transition";
+            document.getElementById('g-btn-azalis').className = "px-4 py-2 bg-slate-950 text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-800 transition";
+            document.getElementById('g-btn-stabil').className = "px-4 py-2 bg-slate-950 text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-800 transition";
+
+            const selectAns = document.getElementById('grafik-select-answer');
+            selectAns.value = "";
+
+            const fb = document.getElementById('grafik-feedback');
+            fb.classList.add('hidden');
+
+            const svg = document.getElementById('grafik-svg');
+
+            if (activeGrafikTrend === 'artiş') {
+                document.getElementById('g-btn-artis').className = "px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-indigo-600/25";
+                svg.innerHTML = `
+                    <line x1="5" y1="45" x2="95" y2="45" stroke="#1e293b" stroke-width="1.5" />
+                    <line x1="5" y1="5" x2="5" y2="45" stroke="#1e293b" stroke-width="1.5" />
+                    <path d="M 10 40 Q 30 35, 50 20 T 90 5" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" />
+                    <circle cx="90" cy="5" r="2" fill="#4f46e5" />
+                `;
+            } else if (activeGrafikTrend === 'azaliş') {
+                document.getElementById('g-btn-azalis').className = "px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-indigo-600/25";
+                svg.innerHTML = `
+                    <line x1="5" y1="45" x2="95" y2="45" stroke="#1e293b" stroke-width="1.5" />
+                    <line x1="5" y1="5" x2="5" y2="45" stroke="#1e293b" stroke-width="1.5" />
+                    <path d="M 10 10 Q 30 15, 50 30 T 90 40" fill="none" stroke="#f43f5e" stroke-width="2.5" stroke-linecap="round" />
+                    <circle cx="90" cy="40" r="2" fill="#e11d48" />
+                `;
+            } else {
+                document.getElementById('g-btn-stabil').className = "px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-indigo-600/25";
+                svg.innerHTML = `
+                    <line x1="5" y1="45" x2="95" y2="45" stroke="#1e293b" stroke-width="1.5" />
+                    <line x1="5" y1="5" x2="5" y2="45" stroke="#1e293b" stroke-width="1.5" />
+                    <path d="M 10 25 L 30 25 L 55 24 L 90 25" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" />
+                    <circle cx="90" cy="25" r="2" fill="#059669" />
+                `;
+            }
+        }
+
+        function selectGrafikTrend(trend) {
+            activeGrafikTrend = trend;
+            loadGrafikbeschreibung();
+        }
+
+        function checkGrafikAnswer() {
+            const selectVal = document.getElementById('grafik-select-answer').value;
+            const fb = document.getElementById('grafik-feedback');
+            fb.classList.remove('hidden');
+
+            let correctVal = "gestiegen";
+            if (activeGrafikTrend === 'azaliş') correctVal = "gesunken";
+            if (activeGrafikTrend === 'stabil') correctVal = "konstant geblieben";
+
+            if (selectVal === correctVal) {
+                fb.className = "p-3.5 rounded-xl text-center text-xs font-bold bg-emerald-500/10 border border-emerald-550 text-emerald-400";
+                fb.textContent = "✓ Doğru! Grafikteki trendi başarıyla akademik bir ifadeyle açıkladınız. (+25 XP)";
+                xp += 25;
+
+                if (!dailyQuests.q3) {
+                    dailyQuests.q3 = true;
+                    xp += 30;
+                    toast("Günlük Görev Tamamlandı: Grafik Çözümleyici! (+30 XP)");
+                }
+                saveState();
+            } else {
+                fb.className = "p-3.5 rounded-xl text-center text-xs font-bold bg-rose-500/10 border border-rose-550 text-rose-400";
+                fb.textContent = `✗ Yanlış seçim. Bu grafiğe göre kurve "${correctVal}" olmalıdır.`;
+            }
+        }
+
+        // TAB 7: REDEMITTEL (SINAV ŞABLONLARI)
+        let activeRedemittelCategory = "einleitung";
+
+        function loadRedemittel() {
+            ['einleitung', 'grafik', 'argument', 'meinung'].forEach(cat => {
+                document.getElementById(`r-btn-${cat}`).className = "px-4 py-2 text-xs font-bold rounded-xl shrink-0 transition bg-slate-900 text-slate-450 hover:text-slate-200";
+            });
+
+            document.getElementById(`r-btn-${activeRedemittelCategory}`).className = "px-4 py-2 text-xs font-bold rounded-xl shrink-0 transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/20";
+
+            const data = redemittelTemplates[activeRedemittelCategory];
+            const listContainer = document.getElementById('redemittel-list');
+            listContainer.innerHTML = "";
+
+            data.forEach((item, idx) => {
+                listContainer.innerHTML += `
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between hover:border-slate-700 transition">
+                        <div>
+                            <span class="text-[10px] text-indigo-400 font-bold uppercase tracking-wider block mb-1">${item.title}</span>
+                            <p class="text-sm font-semibold text-slate-200 leading-relaxed font-mono select-all">"${item.de}"</p>
+                            <p class="text-xs text-slate-450 mt-1.5 italic">→ ${item.tr}</p>
+                        </div>
+                        <div class="flex space-x-2 mt-4 pt-3 border-t border-slate-950">
+                            <button onclick="speak('${item.de}')" class="text-xs text-slate-300 hover:text-indigo-400 flex items-center space-x-1">
+                                <i data-lucide="volume-2" class="h-4 w-4"></i>
+                                <span>Dinle</span>
+                            </button>
+                            <button onclick="copyRedemittel('${item.de}')" class="text-xs text-slate-300 hover:text-indigo-400 flex items-center space-x-1">
+                                <i data-lucide="copy" class="h-4 w-4"></i>
+                                <span>Kopyala</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function selectRedemittelCategory(category) {
+            activeRedemittelCategory = category;
+            loadRedemittel();
+        }
+
+        function copyRedemittel(text) {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            toast("Şablon panoya kopyalandı!");
+        }
+
+        // TAB 8: SÖZLÜK / KELİME YÖNETİMİ
+        function renderDictionary() {
+            const query = document.getElementById('dictionary-search').value.toLowerCase();
+            const grid = document.getElementById('dictionary-grid');
+            grid.innerHTML = "";
+
+            const filtered = vocabulary.filter(v => 
+                v.word.toLowerCase().includes(query) ||
+                v.meaning.toLowerCase().includes(query)
+            );
+
+            filtered.forEach(item => {
+                grid.innerHTML += `
+                    <div class="bg-slate-900 border border-slate-850 rounded-2xl p-5 hover:border-slate-700 transition flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-[9px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded font-bold font-mono uppercase">${item.level}</span>
+                                    <h4 class="text-lg font-bold text-slate-100 mt-1 font-mono">${item.word}</h4>
+                                </div>
+                                <div class="flex space-x-1">
+                                    <button onclick="speak('${item.word}')" class="text-slate-400 hover:text-indigo-400 p-1.5 rounded-lg transition">
+                                        <i data-lucide="volume-2" class="h-4 w-4"></i>
+                                    </button>
+                                    <button onclick="toggleMasteredInDict(${item.id})" class="p-1.5 rounded-lg transition ${masteredIds.includes(item.id) ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-500 hover:text-emerald-450'}">
+                                        <i data-lucide="check" class="h-4 w-4"></i>
+                                    </button>
+                                    <button onclick="deleteWord(${item.id})" class="text-slate-500 hover:text-rose-500 p-1.5 rounded-lg transition">
+                                        <i data-lucide="trash-2" class="h-4 w-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 space-y-1.5 border-t border-slate-950 pt-3 text-xs">
+                                <p><span class="text-slate-500 font-bold uppercase">Anlamı:</span> <span class="text-slate-200 font-semibold">${item.meaning}</span></p>
+                                ${item.collocation ? `<p><span class="text-slate-500 font-bold uppercase">Kalıbı:</span> <span class="text-indigo-400 font-mono">${item.collocation}</span></p>` : ""}
+                                ${item.preposition ? `<p><span class="text-slate-500 font-bold uppercase">Edatı:</span> <span class="text-slate-300 font-mono">${item.preposition}</span></p>` : ""}
+                                ${item.example ? `
+                                    <div class="bg-slate-950 p-2.5 rounded-lg mt-2 border border-slate-850/40">
+                                        <span class="text-[8px] text-slate-500 font-bold uppercase block">Örnek:</span>
+                                        <p class="text-slate-300 italic">"${item.example}"</p>
+                                        <p class="text-slate-400 text-[10px] mt-0.5">→ ${item.exampleTr}</p>
+                                    </div>
+                                ` : ""}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function toggleMasteredInDict(id) {
+            if (masteredIds.includes(id)) {
+                masteredIds = masteredIds.filter(mid => mid !== id);
+                toast("Ezber listesinden çıkarıldı.");
+            } else {
+                masteredIds.push(id);
+                xp += 20;
+                toast("Kelime ezberlendi! (+20 XP)");
+            }
+            saveState();
+            renderDictionary();
+        }
+
+        function deleteWord(id) {
+            vocabulary = vocabulary.filter(v => v.id !== id);
+            errorBox = errorBox.filter(eid => eid !== id);
+            masteredIds = masteredIds.filter(mid => mid !== id);
+            saveState();
+            toast("Kelime başarıyla silindi.", "info");
+            renderDictionary();
+        }
+
+        // MODAL YÖNETİMİ
+        function openAddModal() {
+            document.getElementById('add-modal').classList.remove('hidden');
+            document.getElementById('add-modal').classList.add('flex');
+        }
+
+        function closeAddModal() {
+            document.getElementById('add-modal').classList.add('hidden');
+            document.getElementById('add-modal').classList.remove('flex');
+        }
+
+        function saveNewWord(e) {
+            e.preventDefault();
+
+            const word = document.getElementById('add-word').value.trim();
+            const level = document.getElementById('add-level').value;
+            const preposition = document.getElementById('add-prep').value.trim();
+            const meaning = document.getElementById('add-meaning').value.trim();
+            const collocation = document.getElementById('add-collocation').value.trim();
+            const example = document.getElementById('add-example').value.trim();
+            const exampleTr = document.getElementById('add-example-tr').value.trim();
+
+            const added = {
+                id: Date.now(),
+                word,
+                level,
+                preposition,
+                meaning,
+                collocation,
+                example,
+                exampleTr
+            };
+
+            vocabulary.push(added);
+            xp += 15;
+            saveState();
+
+            document.getElementById('add-word').value = "";
+            document.getElementById('add-prep').value = "";
+            document.getElementById('add-meaning').value = "";
+            document.getElementById('add-collocation').value = "";
+            document.getElementById('add-example').value = "";
+            document.getElementById('add-example-tr').value = "";
+
+            closeAddModal();
+            toast("Yeni kelime başarıyla eklendi! (+15 XP)");
+            renderDictionary();
+        }
+
+        // INIT LOAD (UYGULAMA BAŞLANGICI)
+        window.onload = function() {
+            showTab('dashboard');
+            updateStatsUI();
+            
+            document.getElementById('dikte-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkDikteAnswer();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+```
