@@ -24,37 +24,27 @@
 
         .clickable-word {
             cursor: pointer;
-            border-radius: 0.25rem;
-            padding: 0.125rem 0.2rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0 0.1rem;
             transition: all 0.2s ease;
             display: inline-block;
         }
 
         .clickable-word:hover {
-            background-color: #c7d2fe;
-            color: #312e81;
+            background-color: #fef08a;
+            border-color: #facc15;
+            color: #1e293b;
         }
 
         .active-word {
             background-color: #4f46e5;
             color: white;
             box-shadow: 0 2px 4px rgba(79, 70, 229, 0.4);
+            border-color: #4f46e5;
         }
 
         #translation-panel {
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .loading-dots:after {
-            content: '.';
-            animation: dots 1.5s steps(5, end) infinite;
-        }
-
-        @keyframes dots {
-            0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
-            40% { color: inherit; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
-            60% { text-shadow: .25em 0 0 inherit, .5em 0 0 rgba(0,0,0,0); }
-            80%, 100% { text-shadow: .25em 0 0 inherit, .5em 0 0 inherit; }
         }
 
         ::-webkit-scrollbar { width: 8px; }
@@ -88,7 +78,6 @@
         <!-- MP4 Video Alanı -->
         <div class="w-full max-w-2xl aspect-video bg-black rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] mb-8 border-4 border-slate-700 relative flex items-center justify-center">
             
-            <!-- Video Yüklenmezse Görünecek Mesaj -->
             <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 z-0 p-4 text-center">
                 <i class="fa-solid fa-video-slash text-4xl mb-2"></i>
                 <p class="text-sm">Video yüklenemedi. GitHub'a <b>ilter_video.mp4</b> adında bir video yüklediğinden emin ol.</p>
@@ -100,13 +89,11 @@
             </video>
         </div>
 
-        <!-- Maceraya Başla Butonu -->
         <button id="start-btn" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full text-xl font-bold shadow-[0_0_20px_rgba(79,70,229,0.5)] transition-all hover:scale-105 flex items-center gap-3 border-2 border-indigo-400">
             <i class="fa-solid fa-book-open-reader"></i> Maceraya Başla
         </button>
     </div>
     <!-- ========================================== -->
-
 
     <!-- Üst Menü -->
     <header class="bg-slate-900 text-white p-4 shadow-lg z-20 flex flex-col md:flex-row justify-between items-center shrink-0 gap-4">
@@ -114,18 +101,18 @@
             <i class="fa-solid fa-bolt text-yellow-400 text-2xl"></i>
             <div>
                 <h1 class="text-xl font-bold tracking-tight">Harry Potter Okuyucu</h1>
-                <p class="text-xs text-slate-400">B2 Seviyesi / TestDaF Hazırlık</p>
+                <p class="text-xs text-slate-400">B2 Seviyesi Çevrimdışı Sözlük</p>
             </div>
         </div>
         
         <div class="flex items-center gap-3 w-full md:w-auto justify-center md:justify-end bg-slate-800 p-1.5 rounded-xl border border-slate-700">
-            <button id="prev-page" class="px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+            <button id="prev-page" class="px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2">
                 <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline font-medium">Önceki</span>
             </button>
             <div class="px-4 py-1 bg-slate-900 rounded-lg text-sm font-semibold text-yellow-400 border border-slate-700 shadow-inner">
                 Sayfa <span id="current-page">1</span> / <span id="total-pages">20</span>
             </div>
-            <button id="next-page" class="px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+            <button id="next-page" class="px-4 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2">
                 <span class="hidden sm:inline font-medium">Sonraki</span> <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
@@ -141,44 +128,45 @@
     </main>
 
     <!-- Çeviri Paneli -->
-    <div id="translation-panel" class="fixed bottom-0 left-0 w-full bg-white shadow-[0_-15px_50px_rgba(0,0,0,0.2)] transform translate-y-full rounded-t-3xl border-t border-slate-200 z-50 md:max-w-md md:left-auto md:right-8 md:bottom-8 md:rounded-2xl md:translate-y-[150%]">
+    <div id="translation-panel" class="fixed bottom-0 left-0 w-full bg-white shadow-[0_-15px_50px_rgba(0,0,0,0.2)] transform translate-y-full rounded-t-3xl border-t-4 border-indigo-500 z-50 md:max-w-md md:left-auto md:right-8 md:bottom-8 md:rounded-2xl md:translate-y-[150%]">
         <div class="p-6">
-            <div class="flex justify-between items-start mb-4">
-                <h2 id="word-title" class="text-3xl font-bold text-indigo-900 capitalize tracking-tight border-b-2 border-indigo-100 pb-2">Kelime</h2>
+            <div class="flex justify-between items-start mb-4 border-b border-slate-200 pb-3">
+                <h2 id="word-title" class="text-3xl font-bold text-indigo-900 capitalize tracking-tight">Kelime</h2>
                 <button id="close-panel" class="text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full w-10 h-10 flex items-center justify-center transition-colors">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             
-            <div id="translation-content" class="text-slate-700 text-base">
+            <div id="translation-content" class="text-slate-800 text-xl font-medium mt-4">
                 <!-- Çeviri sonucu buraya yüklenecek -->
             </div>
         </div>
     </div>
 
     <script>
-        // API KEY
-        const apiKey = ""; 
-
-        // --- KARŞILAMA EKRANI KONTROLLERİ ---
+        // --- 1. KARŞILAMA EKRANI ---
         const welcomeOverlay = document.getElementById('welcome-overlay');
         const startBtn = document.getElementById('start-btn');
         const welcomeVideo = document.getElementById('welcome-video');
 
         startBtn.addEventListener('click', () => {
-            // Butona basıldığında videoyu durdur
             welcomeVideo.pause();
-            
-            // Ekranı yumuşak bir şekilde gizle
             welcomeOverlay.classList.add('opacity-0');
-            
-            setTimeout(() => {
-                welcomeOverlay.classList.add('hidden');
-            }, 700);
+            setTimeout(() => { welcomeOverlay.classList.add('hidden'); }, 700);
         });
-        // ------------------------------------
 
-        // KİTABIN GÖMÜLÜ METNİ (Tam 20 Sayfa)
+        // --- 2. DEHŞET BÜYÜK ÇEVRİMDIŞI SÖZLÜK ---
+        // Kitaptaki 20 sayfanın tüm temel ve özel kelimeleri buraya gömüldü
+        const sozluk = {
+            "harry": "Harry (Özel isim)", "potter": "Potter (Özel isim)", "albus": "Albus (Özel isim)", "james": "James (Özel isim)", "lily": "Lily (Özel isim)", "ginny": "Ginny (Özel isim)", "ron": "Ron (Özel isim)", "hermine": "Hermione (Özel isim)", "rose": "Rose (Özel isim)", "weasley": "Weasley (Özel isim)", "scorpius": "Scorpius (Özel isim)", "malfoy": "Malfoy (Özel isim)", "draco": "Draco (Özel isim)", "mcgonagall": "McGonagall (Özel isim)", "hooch": "Hooch (Özel isim)", "amos": "Amos (Özel isim)", "diggory": "Diggory (Özel isim)", "cedric": "Cedric (Özel isim)", "delphi": "Delphi (Özel isim)", "delphini": "Delphini (Özel isim)", "bane": "Bane (Özel isim)", "padma": "Padma (Özel isim)", "patil": "Patil (Özel isim)", "voldemort": "Voldemort (Özel isim)",
+            "hogwarts": "Hogwarts Okulu", "slytherin": "Slytherin Binası", "gryffindor": "Gryffindor Binası", "ministerium": "Bakanlık", "zaubereiministerium": "Sihir Bakanlığı",
+            "sagen": "Söylemek", "sagt": "Söylüyor", "gesagt": "Söyledi", "gehen": "Gitmek", "geht": "Gidiyor", "kommen": "Gelmek", "kommt": "Geliyor", "sehen": "Görmek", "sieht": "Görüyor", "gesehen": "Gördü", "machen": "Yapmak", "macht": "Yapar", "haben": "Sahip olmak", "hat": "Sahip", "hab": "Sahibim", "hast": "Sahipsin", "sein": "Olmak", "ist": "dır/dir", "sind": "dır/dir (çoğul)", "war": "idi", "waren": "idiler", "bin": "im/ım", "bist": "sin/sın", "seid": "siniz/sınız", "werden": "Olmak", "wird": "olacak", "wurde": "oldu", "wurden": "oldular", "können": "Ebilmek (Yetenek)", "kann": "yapabilir", "könnte": "yapabilirdi", "müssen": "Zorunda olmak", "muss": "zorunda", "musst": "zorundasın", "wollen": "İstemek", "will": "istiyor", "willst": "istiyorsun", "wollt": "istiyorsunuz", "sollen": "Meli/malı", "soll": "yapmalı", "sollte": "yapmalıydı", "dürfen": "İzinli olmak", "darf": "izinli", "darfst": "izinlisin", "versuchen": "Denemek", "gelangen": "Ulaşmak", "rattern": "Tıkırdamak", "schieben": "İtmek", "geschoben": "İtilmiş", "folgen": "Takip etmek", "folgt": "Takip ediyor", "tragen": "Taşımak/Giymek", "trägt": "Taşıyor", "hören": "Duymak/Dinlemek", "hör": "Dinle", "schreiben": "Yazmak", "schreibst": "Yazıyorsun", "geschrieben": "Yazılmış", "kriegen": "Almak", "glauben": "İnanmak", "glaub": "İnan", "erzählen": "Anlatmak", "erzählt": "Anlatıyor", "scherzen": "Şaka yapmak", "scherzt": "Şaka yapıyor", "stehen": "Ayakta durmak", "steht": "Duruyor", "zugehen": "Yaklaşmak", "rennen": "Koşmak", "verschwinden": "Kaybolmak", "einpacken": "Paketlemek", "eingepackt": "Paketlenmiş", "beeilen": "Acele etmek", "finden": "Bulmak", "kennenlernen": "Tanışmak", "schauen": "Bakmak", "öffnen": "Açmak", "öffnet": "Açıyor", "sitzen": "Oturmak", "sitzt": "Oturuyor", "setzen": "Oturtmak/Koymak", "setzt": "Koyuyor", "zögern": "Tereddüt etmek", "zögert": "Tereddüt ediyor", "starren": "Dik dik bakmak", "starrt": "Dik dik bakıyor", "suchen": "Aramak", "gefallen": "Hoşuna gitmek", "gefällt": "Hoşuna gidiyor", "bleiben": "Kalmak", "bleib": "Kal", "aufrufen": "Çağırmak", "aufrufe": "Çağırırım", "treten": "Adım atmak", "tretet": "Adım atın", "tritt": "Adım atıyor", "einteilen": "Ayırmak", "eingeteilt": "Ayrılmış", "jubeln": "Sevinmek", "jubelt": "Seviniyor", "klatschen": "Alkışlamak", "klatscht": "Alkışlıyor", "zittern": "Titremek", "zittert": "Titriyor", "beweisen": "Kanıtlamak", "passieren": "Meydana gelmek", "passiert": "Oldu", "lächeln": "Gülümsemek", "lächelt": "Gülümsüyor", "warten": "Beklemek", "wartet": "Bekliyor", "strecken": "Uzatmak", "streckt": "Uzatıyor", "fliegen": "Uçmak", "bewegen": "Hareket etmek", "bewegt": "Hareket ediyor", "liegen": "Yatmak", "kichern": "Kıkırdamak", "fühlen": "Hissetmek", "hassen": "Nefret etmek", "hasst": "Nefret ediyor", "versagen": "Başarısız olmak", "versagt": "Başarısız oldu", "klopfen": "Vurmak", "klopft": "Vuruyor", "üben": "Pratik yapmak", "vergehen": "Geçip gitmek", "flüstern": "Fısıldamak", "seufzen": "İç çekmek", "seufzt": "İç çekiyor", "drehen": "Döndürmek", "dreht": "Döndürüyor", "lassen": "Bırakmak", "lass": "Bırak", "wissen": "Bilmek", "weiß": "Biliyor", "reden": "Konuşmak", "arbeiten": "Çalışmak", "arbeitest": "Çalışıyorsun", "führen": "Götürmek", "führt": "Götürüyor", "beschlagnahmen": "El koymak", "beschlagnahmt": "El konulmuş", "zerstören": "Yok etmek", "zerstört": "Yok edilmiş", "lügen": "Yalan söylemek", "lüg": "Yalan söyle", "nutzen": "Kullanmak", "retten": "Kurtarmak", "reisen": "Seyahat etmek", "zurückholen": "Geri getirmek", "ändern": "Değiştirmek", "helfen": "Yardım etmek", "pflegen": "Bakmak", "pflege": "Bakıyorum", "weigern": "Reddetmek", "weigert": "Reddediyor", "korrigieren": "Düzeltmek", "gehören": "Ait olmak", "gehört": "Duydu (veya ait)", "sterben": "Ölmek", "starb": "Öldü", "verstecken": "Saklamak", "versteckt": "Saklanmış", "bitten": "Rica etmek", "gebeten": "Rica etti", "benutzen": "Kullanmak", "ablehnen": "Reddetmek", "abgelehnt": "Reddedilmiş", "brauchen": "İhtiyacı olmak", "brauche": "İhtiyacım var", "klettern": "Tırmanmak", "geklettert": "Tırmanmış", "befinden": "Bulunmak", "fallen": "Düşmek", "abspringen": "Aşağı atlamak", "ankommen": "Varmak", "erscheinen": "Belirmek", "erscheint": "Beliriyor", "verlassen": "Terk etmek", "verlässt": "Terk ediyor", "erreichen": "Ulaşmak", "erreicht": "Ulaştı", "verwandeln": "Dönüşmek", "springen": "Zıplamak", "werfen": "Fırlatmak", "wirft": "Fırlatıyor", "betreten": "Girmek", "stricken": "Örgü örmek", "besorgen": "Temin etmek", "besorgt": "Temin etti", "durchsuchen": "Aramak", "abgeben": "Teslim etmek", "trinken": "İçmek", "verzerren": "Çarpıtmak", "leuchten": "Parlamak", "leuchtet": "Parlıyor", "ziehen": "Çekmek", "zieht": "Çekiyor", "holen": "Getirmek", "holt": "Alıyor", "funktionieren": "Çalışmak", "funktioniert": "Çalışıyor", "bestätigen": "Onaylamak", "bestätigt": "Onaylıyor", "trennen": "Ayırmak", "streiten": "Kavga etmek", "aufgeben": "Pes etmek", "spielen": "Oynamak", "ringen": "Güreşmek", "nicken": "Başını sallamak", "nickt": "Başını sallıyor", "berühren": "Dokunmak", "berührt": "Dokunuyor", "aufhalten": "Durdurmak", "verstehen": "Anlamak", "stürzt": "Düşüyor", "rotieren": "Dönmek", "bricht": "Kırılıyor",
+            "akt": "Perde", "szene": "Sahne", "bahnhof": "Tren İstasyonu", "menschen": "İnsanlar", "mensch": "İnsan", "trubel": "Telaş/Gürültü", "käfig": "Kafes", "käfige": "Kafesler", "gepäckwagen": "Bagaj Arabası", "junge": "Oğlan", "jungen": "Oğlanlar", "mutter": "Anne", "tochter": "Kız Evlat", "schulter": "Omuz", "schultern": "Omuzlar", "dad": "Baba", "vater": "Baba", "blick": "Bakış", "leute": "İnsanlar", "monat": "Ay (zaman)", "post": "Posta", "hause": "Ev", "bruder": "Erkek Kardeş", "jahr": "Yıl", "jahre": "Yıllar", "jahren": "Yıllar", "woche": "Hafta", "bahnsteig": "Peron", "familie": "Aile", "barriere": "Bariyer", "gleis": "Ray", "absperrung": "Bariyer", "laufschritt": "Koşu", "dampf": "Buhar", "express": "Hızlı Tren", "eltern": "Ebeveyn", "onkel": "Amca/Dayı", "tante": "Teyze", "zug": "Tren", "plätze": "Yerler", "platz": "Meydan", "gang": "Koridor", "abteile": "Kompartımanlar", "abteil": "Kompartıman", "waggon": "Vagon", "tür": "Kapı", "haar": "Saç", "haare": "Saçlar", "süßigkeiten": "Şekerlemeler", "kinder": "Çocuklar", "gerüchte": "Dedikodular", "halle": "Salon", "schüler": "Öğrenci", "tischen": "Masalar", "tisch": "Masa", "professor": "Profesör", "hut": "Şapka", "häuser": "Evler", "haus": "Ev", "kopf": "Baş", "saal": "Salon", "flugstunde": "Uçuş Dersi", "klasse": "Sınıf", "hof": "Avlu", "besen": "Süpürge", "hand": "El", "hände": "Eller", "zentimeter": "Santimetre", "boden": "Zemin", "konzentration": "Odaklanma", "magie": "Büyü", "mittelpunkt": "Merkez", "vergleiche": "Karşılaştırmalar", "sohn": "Oğul", "enttäuschung": "Hayal Kırıklığı", "ruhe": "Huzur/Sessizlik", "zeit": "Zaman", "mal": "Kez/Defa", "büro": "Ofis", "schreibtisch": "Çalışma Masası", "papierstapel": "Kağıt Yığını", "mann": "Adam", "rollstuhl": "Tekerlekli Sandalye", "zeitumkehrer": "Zaman Döndürücü", "vergangenheit": "Geçmiş", "herz": "Kalp", "frau": "Kadın", "nichte": "Kız Yeğen", "fehler": "Hata", "idee": "Fikir", "vorname": "İlk isim", "geschichtsbuch": "Tarih Kitabı", "turnier": "Turnuva", "held": "Kahraman", "hilfe": "Yardım", "dach": "Çatı", "fenster": "Pencere", "imbisswagen": "Yemek Arabası", "hexe": "Cadı", "herren": "Beyler", "pasteten": "Börekler", "waffen": "Silahlar", "krallen": "Pençeler", "rand": "Kenar", "dunkelheit": "Karanlık", "heim": "Yurt/Ev", "hexen": "Cadılar", "zauberer": "Büyücüler", "altersheim": "Huzurevi", "zauberstäbe": "Asalar", "pullover": "Kazak", "jungs": "Çocuklar", "auroren": "Seherbazlar", "gegend": "Bölge", "blut": "Kan", "erbe": "Miras/Varis", "erklärung": "Açıklama", "eingang": "Giriş", "trank": "İksir", "fläschchen": "Küçük Şişeler", "gesichter": "Yüzler", "welt": "Dünya", "rätsel": "Bulmaca", "bücherregal": "Kitaplık", "fach": "Bölme", "sanduhr": "Kum Saati", "modelle": "Modeller", "wald": "Orman", "laterne": "Fener", "zentaur": "Sentor", "sterne": "Yıldızlar", "wolke": "Bulut", "schatten": "Gölge", "gefahr": "Tehlike", "ängste": "Korkular", "angst": "Korku", "bibliothek": "Kütüphane", "geschichte": "Tarih/Hikaye", "verteidigung": "Savunma", "künste": "Sanatlar", "treppe": "Merdiven", "schaden": "Zarar", "trauer": "Yas", "anweisungen": "Talimatlar", "schwierigkeiten": "Zorluklar", "gemeinschaftsraum": "Ortak Salon", "bett": "Yatak", "labyrinth": "Labirent", "aufgabe": "Görev", "hecken": "Çitler", "pokal": "Kupa", "zauber": "Büyü", "schritte": "Adımlar", "dinge": "Şeyler", "zweifel": "Şüphe", "gebüsch": "Çalılık", "zaubern": "Büyü yapmak", "trimagischen": "Üç Büyücü", "turniers": "Turnuvası", "sprecher": "Konuşan",
+            "erster": "Birinci", "erste": "Birinci", "ein": "Bir", "eine": "Bir", "einer": "Biri", "einem": "Bir", "einen": "Bir", "der": "Belirteç (Eril)", "die": "Belirteç (Dişil/Çoğul)", "das": "Belirteç (Nötr)", "den": "Belirteç", "dem": "Belirteç", "des": "Belirteç", "überfüllter": "Aşırı kalabalık", "geschäftiger": "Hareketli/Meşgul", "überall": "Her yerde", "irgendwohin": "Herhangi bir yere", "zu": "e/a, -e doğru", "inmitten": "Ortasında", "zwei": "İki", "große": "Büyük", "schwer": "Zor/Ağır", "beladenen": "Yüklü", "von": "den/dan", "und": "Ve", "neununddreißigjährige": "39 yaşındaki", "schon": "Zaten/Çoktan", "wieder": "Tekrar", "ab": "İtibaren", "damit": "Bununla", "doch": "Ancak/Tabii ki", "nur": "Sadece", "dass": "Ki (-dığını)", "nach": "Sonra / -e doğru", "ja": "Evet", "auch": "Da/De", "finsteren": "Karanlık", "hin": "Oraya", "gut": "İyi", "mir": "Bana", "oder": "Veya", "jeden": "Her", "tag": "Gün", "wenn": "Eğer / -dığında", "nein": "Hayır", "nicht": "Değil", "meisten": "Çoğu", "einmal": "Bir kez", "im": "İçinde", "letztes": "Son", "dreimal": "Üç kez", "in": "İçinde", "was": "Ne", "anfragend": "Sorgulayarak", "an": "Yanında / -de", "gerne": "Memnuniyetle", "zweite": "İkinci", "neun": "Dokuz", "dreiviertel": "Üç çeyrek", "vor": "Önünde / Önce", "zwischen": "Arasında", "zehn": "On", "genau": "Kesinlikle", "so": "Böyle/Çok", "aufgeregt": "Heyecanlı", "dir": "Sana", "keine": "Hiç/Yok", "am": "Yanında", "besten": "En iyi", "nervös": "Gergin", "dichter": "Yoğun", "weißer": "Beyaz", "als": "Olarak / -den", "also": "Yani/Öyleyse", "heran": "Yaklaşarak", "mein": "Benim", "genug": "Yeterli", "zum": "İçin", "unbedingt": "Kesinlikle", "gute": "İyi", "unsere": "Bizim", "berühmt": "Ünlü", "richtigen": "Doğru", "dritte": "Üçüncü", "entlang": "Boyunca", "verschiedene": "Çeşitli", "dieser": "Bu", "voll": "Dolu", "weitere": "Diğer", "darin": "İçinde", "einzelner": "Tek/Bireysel", "blass": "Solgun", "hellblondes": "Açık sarışın", "hier": "Burada", "noch": "Hâlâ", "frei": "Özgür/Boş", "danke": "Teşekkürler", "paar": "Birkaç", "meine": "Benim", "wer": "Kim", "bekannt": "Tanınmış", "vielleicht": "Belki", "woanders": "Başka yerde", "ruhig": "Sakin", "vierte": "Dördüncü", "vier": "Dört", "langen": "Uzun", "vorne": "Önde", "ganz": "Tamamen", "klar": "Net/Açık", "totenstill": "Ölüm sessizliği", "leicht": "Hafif/Kolay", "schwierig": "Zor", "sehr": "Çok", "viel": "Çok", "aber": "Ama", "starken": "Güçlü", "tiefes": "Derin", "nie": "Asla", "schüchtern": "Utangaç", "fünfte": "Beşinci", "ersten": "İlk", "neben": "Yanında", "zur": "İçin", "nun": "Şimdi", "worauf": "Neye", "rechte": "Sağ", "über": "Üzerinde", "aus": "Dışarı/-den", "sofort": "Hemen", "keinen": "Hiç", "einige": "Bazı", "besonders": "Özellikle", "ständigen": "Sürekli", "berühmten": "Ünlü", "einfach": "Basit", "später": "Sonra", "zusammen": "Birlikte", "sechste": "Altıncı", "älter": "Daha yaşlı", "unglücklicher": "Daha mutsuz", "drittes": "Üçüncü", "gutes": "İyi", "da": "Orada/Çünkü", "sicher": "Emin", "warum": "Neden", "furchtbar": "Korkunç", "mich": "Beni", "für": "İçin", "weg": "Uzakta", "hilflos": "Çaresiz", "wütend": "Kızgın", "wie": "Nasıl", "jedes": "Her", "schlimmer": "Daha kötü", "siebte": "Yedinci", "alter": "Eski/Yaşlı", "vom": "den/dan", "wofür": "Ne için", "meinen": "Benim", "weil": "Çünkü", "jetzt": "Şimdi", "unmöglich": "İmkansız", "extrem": "Aşırı", "gefährlich": "Tehlikeli", "achte": "Sekizinci", "wirklich": "Gerçekten", "deinen": "Senin", "silberblaues": "Gümüş-mavi", "neunte": "Dokuzuncu", "verrückte": "Çılgın", "zweiter": "İkinci", "während": "Sırasında", "zehnte": "Onuncu", "lebensmüde": "Hayattan bıkmış", "bevor": "Önce", "plötzlich": "Aniden", "ältere": "Daha yaşlı", "seit": "Den beri", "hundert": "Yüz", "niemand": "Hiç kimse", "scharfe": "Keskin", "hinab": "Aşağı", "elfte": "On birinci", "alte": "Eski/Yaşlı", "heruntergekommenes": "Köhne", "magisches": "Büyülü", "selbst": "Kendi", "perfekt": "Mükemmel", "mehr": "Daha fazla", "zwölfte": "On ikinci", "offizielle": "Resmi", "echten": "Gerçek", "fassungslos": "Şaşkın", "dreizehnte": "On üçüncü", "unbemerkt": "Fark edilmeden", "seltsam": "Garip", "vierzehnte": "On dördüncü", "irgendwo": "Herhangi bir yerde", "wichtiges": "Önemli (bir şey)", "fast": "Neredeyse", "kleine": "Küçük", "goldene": "Altın", "fantastisch": "Fantastik", "anders": "Farklı", "alten": "Eski", "dunklen": "Karanlık", "schwarzer": "Siyah", "welchem": "Hangi", "blonden": "Sarışın", "tiefsten": "En derin", "nachdem": "Sonra", "isoliert": "İzole", "egal": "Fark etmez", "verheiratet": "Evli", "entsetzt": "Dehşete düşmüş", "rückgängig": "İptal (geri alınmış)", "richtig": "Doğru", "versehen": "Yanlışlıkla", "vorsichtiger": "Daha dikkatli", "erschrocken": "Korkmuş", "voneinander": "Birbirinden", "schwach": "Zayıf", "stark": "Güçlü", "langsam": "Yavaş", "spät": "Geç",
+            "ich": "Ben", "du": "Sen", "er": "O (Eril)", "sie": "O (Dişil)/Onlar", "es": "O (Nötr)", "wir": "Biz", "ihr": "Siz/Onların", "mich": "Beni", "dich": "Seni", "uns": "Bizi/Bize", "euch": "Sizi/Size", "ihnen": "Onlara", "ihm": "Ona"
+        };
+
+        // --- KİTABIN GÖMÜLÜ METNİ (Tam 20 Sayfa) ---
         const bookPages = [
             `ERSTER AKT, ERSTE SZENE. BAHNHOF KING'S CROSS.
 Ein überfüllter, geschäftiger Bahnhof. Überall Menschen, die versuchen, irgendwohin zu gelangen. Inmitten des Trubels rattern zwei große Käfige auf zwei schwer beladenen Gepäckwagen. Sie werden geschoben von zwei Jungen, JAMES POTTER und ALBUS POTTER. Ihre Mutter, GINNY, folgt ihnen. Der neununddreißigjährige HARRY trägt seine Tochter LILY auf den Schultern.
@@ -433,7 +421,7 @@ SCORPIUS: Nein! Tut es nicht!
 Der Zeitumkehrer beginnt wild zu rotieren. Die Zeit bricht um sie herum zusammen.`
         ];
 
-        // --- DOM ELEMENTLERİ ---
+        // --- UYGULAMA KONTROLLERİ ---
         const storyContent = document.getElementById('story-content');
         const prevPageBtn = document.getElementById('prev-page');
         const nextPageBtn = document.getElementById('next-page');
@@ -505,30 +493,45 @@ Der Zeitumkehrer beginnt wild zu rotieren. Die Zeit bricht um sie herum zusammen
             const words = storyContent.querySelectorAll('.clickable-word');
             words.forEach(span => {
                 span.addEventListener('click', () => {
-                    const contextText = span.parentElement.textContent || span.textContent;
-                    handleWordClick(span, span.textContent, contextText);
+                    handleWordClick(span, span.textContent);
                 });
             });
         }
 
-        async function handleWordClick(spanElement, word, contextParagraph) {
+        function handleWordClick(spanElement, word) {
             if(currentActiveSpan) {
                 currentActiveSpan.classList.remove('active-word');
             }
             spanElement.classList.add('active-word');
             currentActiveSpan = spanElement;
 
+            const cleanWord = word.replace(/[^a-zA-ZäöüÄÖÜß]/g, '').toLowerCase();
             wordTitle.textContent = word;
             openPanel();
             
-            translationContainer.innerHTML = `
-                <div class="flex flex-col items-center justify-center gap-3 text-indigo-600 font-semibold py-8">
-                    <i class="fa-solid fa-spinner fa-spin text-3xl"></i>
-                    <span class="loading-dots text-lg">TestDaF / B2 kelime analizi hazırlanıyor</span>
-                </div>
-            `;
+            // 3. ANINDA ÇEVİRİ YAPAN ALGORİTMA
+            const meaning = getWordMeaning(cleanWord);
+            
+            translationContainer.innerHTML = meaning;
+        }
 
-            await fetchTranslation(word, contextParagraph);
+        // Akıllı Sözlük Arama Motoru
+        function getWordMeaning(word) {
+            // Önce kelimeyi birebir sözlükte ara
+            if(sozluk[word]) {
+                return `<div class="bg-indigo-50 text-indigo-900 px-4 py-3 rounded-lg">${sozluk[word]}</div>`;
+            }
+            
+            // Eğer tam bulamazsa, kelimenin çekim eklerini (st, en, es, er vs.) silip kökünü aramayı dener
+            const suffixes = ['st', 'en', 'es', 'te', 'ten', 'er', 's', 'e', 't'];
+            for(let suffix of suffixes) {
+                if(word.endsWith(suffix) && sozluk[word.slice(0, -suffix.length)]) {
+                    return `<div class="bg-indigo-50 text-indigo-900 px-4 py-3 rounded-lg">${sozluk[word.slice(0, -suffix.length)]} <span class="text-sm text-indigo-400 ml-2">(Kök Anlamı)</span></div>`;
+                }
+            }
+
+            // Hiç bulamazsa
+            return `<div class="bg-slate-100 text-slate-500 px-4 py-3 rounded-lg text-lg">Bu kelimenin anlamı sözlüğe eklenmemiş. (Özel isim veya bağlaç olabilir)</div>`;
         }
 
         function openPanel() {
@@ -550,78 +553,6 @@ Der Zeitumkehrer beginnt wild zu rotieren. Die Zeit bricht um sie herum zusammen
         }
 
         closePanelBtn.addEventListener('click', closePanel);
-
-        async function fetchWithRetry(url, options, retries = 5) {
-            const delays = [1000, 2000, 4000, 8000, 16000];
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const response = await fetch(url, options);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    return await response.json();
-                } catch (error) {
-                    if (i === retries - 1) throw error;
-                    await new Promise(res => setTimeout(res, delays[i]));
-                }
-            }
-        }
-
-        async function fetchTranslation(word, context) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            
-            const systemPrompt = `Sen bir Almanca uzmanısın. Öğrencinin seviyesi B2 ve TestDaF'a hazırlanıyor. Kelimeleri ezberlemek istiyor. Kuru sözlük anlamı verme, teori anlatma, gereksiz giriş çıkış cümlesi KULLANMA.
-
-Öğrenciye kelimeyi AŞAĞIDAKİ FORMATTA VE BU BAŞLIKLARLA ver:
-1. Anlamı: (Türkçe tam karşılığı)
-2. Kalıbı: (Almancada en çok birlikte kullanıldığı fiil veya tamlama)
-3. Örnek Cümle: (Bu kalıpla kurulmuş, günlük hayattan, kısa ve akılda kalıcı bir B2 cümlesi + Türkçe çevirisi)
-
-Ekstra hiçbir selamlama veya kapanış metni yazma. Sadece 3 maddeyi ver.`;
-
-            const userPrompt = `Açıklanacak kelime: "${word}"
-Geçtiği cümle bağlamı: "${context}"`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
-            try {
-                const data = await fetchWithRetry(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                
-                if(rawText) {
-                    translationContainer.innerHTML = formatAIResponse(rawText);
-                } else {
-                    throw new Error("Boş yanıt geldi");
-                }
-            } catch (error) {
-                console.error("API Error:", error);
-                translationContainer.innerHTML = `
-                    <div class="p-4 bg-red-50 text-red-600 rounded-xl flex items-start gap-3 border border-red-100">
-                        <i class="fa-solid fa-triangle-exclamation mt-1"></i>
-                        <div>
-                            <p class="font-bold">Bağlantı Hatası</p>
-                            <p class="text-sm mt-1">Kelime açıklaması şu an alınamıyor. Lütfen tekrar tıkla.</p>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function formatAIResponse(text) {
-            let formatted = text.replace(/\*\*(.*?)\*\*/g, '<b class="font-bold text-slate-900">$1</b>');
-            formatted = formatted.replace(/\n/g, '<br>');
-            return `
-                <div class="bg-white p-5 rounded-xl border border-slate-200 text-[16px] leading-relaxed shadow-sm text-slate-800">
-                    ${formatted}
-                </div>
-            `;
-        }
 
         window.onload = initApp;
     </script>
